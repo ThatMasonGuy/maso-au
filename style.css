@@ -44,7 +44,7 @@ h1{
 }
 
 .hero, main, section, footer {
-    min-height: 100vh; /* This will make each section at least as tall as the viewport */
+    min-height: 95vh; /* This will make each section at least as tall as the viewport */
     width: 100%;
     padding: 20px; /* Add some padding around the content */
 }
@@ -54,13 +54,17 @@ h1{
 }
 
 main {
-    background-color: #b1f0da; /* Change to your preferred color */
+    background-color: #64f0bf; /* Change to your preferred color */
 }
 
-section {
-    background-color: #dab1f0; /* Change to your preferred color */
+.section1 {
+    background-color: #51ff4b; /* Change to your preferred color */
+}
+
+.section2 {
+    background-color: #3da0fc; /* Change to your preferred color */
 }
 
 footer {
-    background-color: #b1daf0; /* Change to your preferred color */
+    background-color: #d875ff; /* Change to your preferred color */
 }
