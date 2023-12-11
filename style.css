@@ -43,11 +43,14 @@ h1{
     margin: 0;
 }
 
-.hero, main, section, footer {
-    min-height: 90vh; /* This will make each section at least as tall as the viewport */
-    width: 100%;
-    padding: 20px; /* Add some padding around the content */
+.hero, main, .section-1, .section-2, footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    min-height: 90vh;
+    width: 100%;
+    padding: 20px;
 }
 
 .hero {
