@@ -44,7 +44,7 @@ h1{
 }
 
 .hero, main, section, footer {
-    min-height: 95vh; /* This will make each section at least as tall as the viewport */
+    min-height: 90vh; /* This will make each section at least as tall as the viewport */
     width: 100%;
     padding: 20px; /* Add some padding around the content */
 }
@@ -57,11 +57,11 @@ main {
     background-color: #64f0bf; /* Change to your preferred color */
 }
 
-.section1 {
+.section-1 {
     background-color: #51ff4b; /* Change to your preferred color */
 }
 
-.section2 {
+.section-2 {
     background-color: #3da0fc; /* Change to your preferred color */
 }
 
