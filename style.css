@@ -47,6 +47,7 @@ h1{
     min-height: 90vh; /* This will make each section at least as tall as the viewport */
     width: 100%;
     padding: 20px; /* Add some padding around the content */
+    align-items: center;
 }
 
 .hero {
