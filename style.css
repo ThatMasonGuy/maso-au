@@ -48,8 +48,8 @@ h1{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 90vh;
-    /* width: 100vw; */
+    min-height: 90%;
+    width: 100%;
 }
 
 .hero {
