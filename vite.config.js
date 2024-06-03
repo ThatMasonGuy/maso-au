@@ -1,7 +1,6 @@
 import path from "path";
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import { visualizer } from 'rollup-plugin-visualizer';
 import tailwind from "tailwindcss";
 import autoprefixer from "autoprefixer";
 
@@ -12,8 +11,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    vue(),
-    visualizer({ open: true }),
+    vue()
   ],
   resolve: {
     alias: {

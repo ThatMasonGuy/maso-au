@@ -15,10 +15,10 @@
                         Enter your email below to login to your account
                     </p>
                 </div>
-                <div class="grid gap-4">
+                <form class="grid gap-4" @submit.prevent="handleEmailLogin">
                     <div class="grid gap-2">
                         <Label for="email">Email</Label>
-                        <Input id="email" type="email" placeholder="example@gmail.com" required v-model="email" />
+                        <Input id="email" type="email" placeholder="example@gmail.com" autocomplete="email" required v-model="email" />
                     </div>
                     <div class="grid gap-2">
                         <div class="flex items-center">
@@ -27,15 +27,16 @@
                                 Forgot your password?
                             </a>
                         </div>
-                        <Input id="password" type="password" required v-model="password" />
+                        <Input id="password" type="password" placeholder="Password" autocomplete="current-password"
+                            required v-model="password" />
                     </div>
-                    <Button type="submit" class="w-full" @click="handleEmailLogin">
+                    <Button type="submit" class="w-full">
                         Login
                     </Button>
-                    <Button variant="outline" class="w-full" @click="handleGoogleLogin">
+                    <Button variant="outline" class="w-full" @click.prevent="handleGoogleLogin">
                         Login with Google
                     </Button>
-                </div>
+                </form>
                 <div class="mt-4 text-center text-sm">
                     Don't have an account?
                     <a href="/signup" class="underline">
@@ -56,7 +57,7 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -64,55 +65,37 @@ import { Label } from '@/components/ui/label';
 import { signIn, signInWithGoogle } from '@/auth';
 import { toast } from "vue-sonner";
 
-export default {
-    components: {
-        Button,
-        Input,
-        Label,
-    },
-    setup() {
-        const currentImage = ref(`https://source.unsplash.com/random/1`);
-        const nextImage = ref(`https://source.unsplash.com/random/2`);
-        const email = ref('');
-        const password = ref('');
+const currentImage = ref(`https://source.unsplash.com/random/1`);
+const nextImage = ref(`https://source.unsplash.com/random/2`);
+const email = ref('');
+const password = ref('');
 
-        const changeImage = () => {
-            nextImage.value = `https://source.unsplash.com/random/${Date.now()}`;
-            const temp = currentImage.value;
-            currentImage.value = nextImage.value;
-            nextImage.value = temp;
-        };
+const changeImage = () => {
+    nextImage.value = `https://source.unsplash.com/random/${Date.now()}`;
+    const temp = currentImage.value;
+    currentImage.value = nextImage.value;
+    nextImage.value = temp;
+};
 
-        onMounted(() => {
-            setInterval(changeImage, 8000);
-        });
+onMounted(() => {
+    setInterval(changeImage, 8000);
+});
 
-        const handleEmailLogin = async () => {
-            try {
-                await signIn(email.value, password.value);
-                toast.success('Login successful!');
-            } catch (error) {
-                toast.error(error.message);
-            }
-        };
+const handleEmailLogin = async () => {
+    try {
+        await signIn(email.value, password.value);
+        toast.success('Login successful!');
+    } catch (error) {
+        toast.error(error.message);
+    }
+};
 
-        const handleGoogleLogin = async () => {
-            try {
-                await signInWithGoogle();
-                toast.success('Login successful!');
-            } catch (error) {
-                toast.error(error.message);
-            }
-        };
-
-        return {
-            currentImage,
-            nextImage,
-            email,
-            password,
-            handleEmailLogin,
-            handleGoogleLogin,
-        };
-    },
+const handleGoogleLogin = async () => {
+    try {
+        await signInWithGoogle();
+        toast.success('Login successful!');
+    } catch (error) {
+        toast.error(error.message);
+    }
 };
 </script>

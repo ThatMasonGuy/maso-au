@@ -14,6 +14,11 @@ service cloud.firestore {
                        request.auth == null && request.resource.data.keys().hasAll(['firstName', 'lastName', 'userName', 'emailAddress', 'phoneNumber', 'dateOfBirth']);
     }
 
+    match /websiteData/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
     // Deny all other reads and writes
     match /{document=**} {
       allow read, write: if false;

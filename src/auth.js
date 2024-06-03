@@ -29,13 +29,13 @@ onAuthStateChanged(auth, async (user) => {
 
             if (!docSnap.exists()) {
                 await setDoc(userDoc, {
-                    firstName: '',
-                    lastName: '',
-                    userName: '',
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    userName: user.userName,
                     emailAddress: user.email,
-                    phoneNumber: '',
-                    dateOfBirth: '',
-                    avatarUrl: '',
+                    phoneNumber: user.phoneNumber,
+                    dateOfBirth: user.dateOfBirth,
+                    avatarUrl: user.avatarUrl,
                 });
             }
 
@@ -93,13 +93,13 @@ export const signUp = async (firstName, lastName, userName, email, phoneNumber, 
         console.log('Calling createUser Cloud Function');
         // Call the Cloud Function to create the user
         const result = await createUserCallable({
-            firstName,
-            lastName,
-            userName,
+            firstName: firstName,
+            lastName: lastName,
+            userName: userName,
             emailAddress: email,
-            phoneNumber,
-            dateOfBirth,
-            password,
+            phoneNumber: phoneNumber,
+            dateOfBirth: dateOfBirth,
+            password: password,
         });
 
         console.log('User created successfully');
@@ -129,13 +129,13 @@ export const signInWithGoogle = async () => {
 
         if (!docSnap.exists()) {
             await setDoc(userDoc, {
-                firstName: '',
-                lastName: '',
-                userName: '',
+                firstName: user.firstName,
+                lastName: user.lastName,
+                userName: user.userName,
                 emailAddress: user.email,
-                phoneNumber: '',
-                dateOfBirth: '',
-                avatarUrl: '',
+                phoneNumber: user.phoneNumber,
+                dateOfBirth: user.dateOfBirth,
+                avatarUrl: user.avatarUrl,
             });
         }
 
