@@ -6,14 +6,12 @@
       <h1 class="text-4xl font-bold mb-8 text-center text-[var(--text-50)]">
         Mason Bartholomai
       </h1>
-      <div class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="max-w-7xl mx-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div v-for="(image, index) in images" :key="index"
             class="relative w-full h-48 sm:h-64 lg:h-80 rounded-lg hover:scale-[1.01] transition-transform duration-300">
             <img :src="image.src" :alt="image.alt"
-              class="w-full h-full object-cover rounded-lg clear-blur" />
-            <img :src="image.src"
-              class="w-full h-full object-cover absolute inset-0 rounded-lg opacity-0 hover:opacity-50 transition-opacity duration-300 blurred-image" />
+              class="w-full h-full object-cover rounded-lg" />
           </div>
         </div>
       </div>
@@ -68,17 +66,3 @@ const images = ref([
 ]);
 
 </script>
-
-<style scoped>
-.blurred-image {
-  @apply absolute inset-0 rounded-2xl;
-  filter: blur(12px);
-}
-
-.clear-blur {
-  @apply absolute inset-0 rounded-xl;
-  filter: blur(0);
-  opacity: 1;
-  z-index: 10 !important;
-}
-</style>

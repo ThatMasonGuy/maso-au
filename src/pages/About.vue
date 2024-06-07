@@ -19,13 +19,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  setup () {
+<script setup>
 
-    return {
-      
-    }
-  }
-};
 </script>
