@@ -88,7 +88,7 @@ const routes = [
     path: '/protected',
     alias: '/protected',
     name: 'Protected',
-    component: () => import('@/pages/authenticated/Protected.vue'),
+    component: () => import('@/pages/Auth/Protected.vue'),
     meta: {
       requiresAuth: true,
       title: 'Protected',
@@ -160,13 +160,13 @@ const routes = [
     },
   },
   {
-    path: '/auth-home',
-    alias: '/auth/home',
-    name: 'Auth Home',
-    component: () => import('@/pages/authenticated/authHome.vue'),
+    path: '/auth/functions',
+    alias: '/auth/function',
+    name: 'Functions',
+    component: () => import('@/pages/Auth/Functions.vue'),
     meta: {
       requiresAuth: true,
-      title: 'Auth Home',
+      title: 'Functions',
       requiresOverlay: true,
       requiresAuthOverlay: true,
       inProgress: false,

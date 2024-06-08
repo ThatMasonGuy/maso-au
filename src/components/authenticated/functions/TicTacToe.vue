@@ -1,43 +1,39 @@
-<!-- @/components/authenticated/functions/UrlShorten.vue -->
+<!-- @/components/authenticated/functions/TicTacToe.vue -->
 <template>
     <div v-if="!open" class="h-60 w-72 bg-gray-800 text-gray-200 rounded-lg shadow-lg p-6 relative">
-        <h1 class="text-3xl font-bold mb-6">URL Shortener</h1>
+        <h1 class="text-3xl font-bold mb-6">Tic-Tac-Toe</h1>
         <Button class="absolute bottom-6 left-6 text-md" @click="$emit('open', componentId)">Open</Button>
     </div>
     <div v-else class="h-full w-[95vw] sm:w-[97vw] md:w-[36rem] lg:w-[54rem] bg-gray-800 text-gray-200 rounded-lg shadow-lg p-6">
-        <h1 class="text-3xl font-bold mb-6">URL Shortener</h1>
-        <p class="mb-6">Enter a URL to shorten it</p>
+        <h1 class="text-3xl font-bold mb-6">Tic-Tac-Toe</h1>
+        <p class="mb-6">Hit the button below to start a game</p>
         <div class="mb-6">
             <div class="flex items-center">
-                <Input v-model="url" class="bg-gray-700 flex-grow rounded-l-md" type="text"
-                    placeholder="Enter URL" />
-                <Button class="ml-2 text-md rounded-r-md" @click="shortenUrl">Shorten</Button>
+                <Button class="text-md rounded-r-md" @click="generateLink">Start Game</Button>
             </div>
         </div>
         <div class="bg-gray-700 p-2 rounded-md border-gray-100 border-[1px]">
-            <p class="break-all text-sm select-all">{{ newUrl || 'Shortened Url...' }}</p>
+            <p class="break-all text-sm select-all">{{ joinUrl || 'Join Link...' }}</p>
+        </div>
+        <div v-if="joinUrl" class="mt-6">
         </div>
         <Button class="mt-6" @click="$emit('close')">Close</Button>
     </div>
 </template>
 
 <script setup>
-import { ref, computed, defineProps, defineEmits } from 'vue';
-import { Input } from '@/components/ui/input';
+import { ref, computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
 import { Button } from '@/components/ui/button';
 import { toast } from 'vue-sonner';
 import { getDoc, setDoc, doc, serverTimestamp } from 'firebase/firestore';
-import { useStore } from 'vuex';
 import { firestore } from '@/firebase';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover'
+import { joinGame } from '@/utils/urlService';
 
+const joinUrl = ref('');
 const store = useStore();
-const url = ref('');
-const newUrl = ref('');
+const route = useRoute();
 
 const user = computed(() => store.getters.user);
 
@@ -56,44 +52,51 @@ const checkDuplicateAndGenerateId = async () => {
 
     do {
         id = generateUniqueId();
-        const docRef = doc(firestore, 'shortenedUrls', id);
+        const docRef = doc(firestore, 'joinUrls', id);
         docSnap = await getDoc(docRef);
     } while (docSnap.exists());
 
     return id;
 };
 
-const shortenUrl = async () => {
+const generateLink = async () => {
     if (!user.value) {
-        toast.error('You need to be logged in to shorten URLs');
-        return;
-    }
-
-    const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?(\?[^\s]*)?$/;
-
-    const urlParts = urlRegex.exec(url.value);
-
-    if (!urlParts) {
-        console.log('URL validation failed for:', url.value);
-        console.log('Validation failed because the URL does not match the expected format.');
-        toast.error('Please enter a valid URL');
+        toast.error('You need to be logged in to play Tic-Tac-Toe');
         return;
     }
 
     const id = await checkDuplicateAndGenerateId();
-    const shortenedUrl = `https://maso.au/r/${id}`;
+    const generatedUrl = `https://maso.au/auth/functions#tictactoe?joinCode=${id}`;
 
     try {
-        await setDoc(doc(firestore, 'shortenedUrls', id), {
-            originalUrl: url.value,
+        await setDoc(doc(firestore, 'joinUrls', id), {
             writtenBy: user.value.uid,
             writtenByUsername: user.value.userName,
             timestamp: serverTimestamp(),
         });
-        newUrl.value = shortenedUrl;
-        toast.success('URL successfully shortened');
+        joinUrl.value = generatedUrl;
+        toast.success('Join URL successfully created');
     } catch (error) {
-        toast.error('Failed to shorten URL');
+        toast.error('Failed to generate Join URL');
+    }
+};
+
+onMounted(() => {
+    const hash = window.location.hash.substring(1);
+    if (hash === 'tictactoe') {
+        const joinCode = route.query.joinCode;
+        if (joinCode) {
+            joinGameByCode(joinCode);
+        }
+    }
+});
+
+const joinGameByCode = async (joinCode) => {
+    try {
+        await joinGame(joinCode, user.value.uid);
+        // Handle successful game join
+    } catch (error) {
+        // Handle game join error
     }
 };
 
