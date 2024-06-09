@@ -30,6 +30,10 @@
                         <Input id="password" type="password" placeholder="Password" autocomplete="current-password"
                             required v-model="password" />
                     </div>
+                    <div class="flex items-center -mt-2">
+                        <Checkbox v-model="rememberMe" />
+                        <Label for="rememberMe" class="ml-2">Remember Me</Label>
+                    </div>
                     <Button type="submit" class="w-full">
                         Login
                     </Button>
@@ -62,13 +66,17 @@ import { ref, onMounted } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { signIn, signInWithGoogle } from '@/auth';
-import { toast } from "vue-sonner";
+import { toast } from 'vue-sonner';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const currentImage = ref(`https://source.unsplash.com/random/1`);
 const nextImage = ref(`https://source.unsplash.com/random/2`);
 const email = ref('');
 const password = ref('');
+const rememberMe = ref(false);
 
 const changeImage = () => {
     nextImage.value = `https://source.unsplash.com/random/${Date.now()}`;
@@ -85,8 +93,13 @@ const handleEmailLogin = async () => {
     try {
         await signIn(email.value, password.value);
         toast.success('Login successful!');
+        router.push('/auth/home');
     } catch (error) {
         toast.error(error.message);
+
+        if (error.code === 'auth/user-not-found') {
+            toast.error('User not found. Please sign up.');
+        }
     }
 };
 
@@ -94,6 +107,7 @@ const handleGoogleLogin = async () => {
     try {
         await signInWithGoogle();
         toast.success('Login successful!');
+        router.push('/auth/home');
     } catch (error) {
         toast.error(error.message);
     }

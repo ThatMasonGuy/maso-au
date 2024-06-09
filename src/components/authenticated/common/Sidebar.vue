@@ -1,0 +1,1 @@
+<!-- @/components/authenticated/common/Sidebar.vue -->

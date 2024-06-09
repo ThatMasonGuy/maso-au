@@ -1,10 +1,6 @@
+import { ref } from 'vue';
 import { auth, firestore } from './firebase';
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-} from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import router from './router';
 import store from './store';
@@ -12,60 +8,9 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 
 const functions = getFunctions();
 const createUserCallable = httpsCallable(functions, 'createUser');
-
-const googleProvider = new GoogleAuthProvider();
-
+const isAuthenticated = ref(false);
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#%^&/.,><';":])[A-Za-z\d@$!%*?&#%^&/.,><';":]{8,}$/;
-
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    try {
-      const token = await user.getIdToken();
-      store.commit('setAuthToken', token);
-
-      const userDoc = doc(firestore, 'users', user.uid);
-      const docSnap = await getDoc(userDoc);
-
-      if (!docSnap.exists()) {
-        await setDoc(userDoc, {
-          firstName: user.firstName || '',
-          lastName: user.lastName || '',
-          userName: user.userName || '',
-          emailAddress: user.emailAddress,
-          phoneNumber: user.phoneNumber || '',
-          avatarUrl: user.photoURL || '',
-        });
-      }
-
-      store.commit('setUser', {
-        uid: user.uid,
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        userName: user.userName || '',
-        emailAddress: user.emailAddress,
-        phoneNumber: user.phoneNumber || '',
-        avatarUrl: user.photoURL || '',
-      });
-
-      const currentRoute = router.currentRoute.value;
-      if (!currentRoute.meta.requiresAuth) {
-        // Allow access to public routes
-      } else if (currentRoute.meta.requiresAuth && !user) {
-        router.push('/login');
-      }
-    } catch (error) {
-      console.error('Error in onAuthStateChanged:', error);
-    }
-  } else {
-    store.commit('clearAuthToken');
-    store.commit('clearUser');
-    const currentRoute = router.currentRoute.value;
-    if (currentRoute.meta.requiresAuth) {
-      router.push('/login');
-    }
-  }
-});
 
 export const signUp = async (
   firstName,
@@ -74,7 +19,8 @@ export const signUp = async (
   emailAddress,
   phoneNumber,
   password,
-  confirmPassword
+  confirmPassword,
+  country,
 ) => {
   try {
     console.log('Validating user input');
@@ -101,89 +47,200 @@ export const signUp = async (
 
     console.log('Calling createUser Cloud Function');
     const result = await createUserCallable({
-      firstName,
-      lastName,
-      userName,
+      firstName: firstName,
+      lastName: lastName,
+      userName: userName,
       emailAddress: emailAddress,
-      phoneNumber,
-      password,
+      phoneNumber: phoneNumber,
+      country: country,
+      password: password,
     });
 
     console.log('User created successfully');
 
-    store.commit('setUser', {
+    store.commit('SET_USER', {
       uid: result.data.uid,
-      firstName,
-      lastName,
-      userName,
-      emailAddress,
-      phoneNumber,
+      firstName: firstName,
+      lastName: lastName,
+      userName: userName,
+      emailAddress: emailAddress,
+      phoneNumber: phoneNumber,
+      country: country,
       avatarUrl: '',
     });
     
-    router.push('/home');
+    router.push('/auth/home');
   } catch (error) {
     console.error('Error creating user:', error);
     throw error;
   }
 };
 
-export const signIn = async (emailAddress, password) => {
+export const createUserDocumentWithAdditionalInfo = async (user, additionalInfo) => {
+  try {
+    if (!user || !additionalInfo) {
+      throw new Error('User and additionalInfo are required');
+    }
+
+    if (!user.uid) {
+      throw new Error('Invalid user');
+    }
+
+    const userDocRef = doc(firestore, 'users', user.uid);
+    const userDocSnapshot = await getDoc(userDocRef);
+
+    if (userDocSnapshot.exists()) {
+      await setDoc(userDocRef, {
+        ...userDocSnapshot.data(),
+        ...additionalInfo,
+        updatedAt: new Date(),
+      }, { merge: true });
+    } else {
+      await setDoc(userDocRef, {
+        ...additionalInfo,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+
+    // Fetch the updated user data from Firestore
+    const updatedUserDocSnapshot = await getDoc(userDocRef);
+    if (updatedUserDocSnapshot.exists()) {
+      const updatedUserData = updatedUserDocSnapshot.data();
+      return updatedUserData;
+    } else {
+      throw new Error('Failed to fetch updated user data');
+    }
+  } catch (error) {
+    console.error('Error updating user document:', error);
+    throw error;
+  }
+};
+
+export const signIn = async (emailAddress, password, rememberMe) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, emailAddress, password);
-    const user = userCredential.user;
-    const token = await user.getIdToken();
-    store.commit('setAuthToken', token);
-    router.push('/home');
+    if (userCredential && userCredential.user) {
+      const userDocRef = doc(firestore, "users", userCredential.user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        const requiredFields = ['createdAt', 'userName', 'emailAddress', 'firstName', 'lastName', 'phoneNumber', 'country', 'updatedAt'];
+        const missingFields = requiredFields.filter(field => !userData[field]);
+        if (missingFields.length > 0) {
+          router.push('/additionalinfo')
+          sessionStorage.setItem('user', JSON.stringify(userData));
+          throw new Error(`User data is missing required fields: ${missingFields.join(', ')}`);
+        }
+        if (rememberMe) {
+          localStorage.setItem('user', JSON.stringify(userData));
+        } else {
+          sessionStorage.setItem('user', JSON.stringify(userData));
+        }
+        return { user: userCredential.user, userData };
+      } else {
+        throw new Error('User data not found in Firestore.');
+      }
+    } else {
+      throw new Error('Authentication failed, no user found.');
+    }
   } catch (error) {
-    console.error('Error signing in:', error);
     throw error;
   }
 };
 
 export const signInWithGoogle = async () => {
+  const provider = new GoogleAuthProvider();
   try {
-    const userCredential = await signInWithPopup(auth, googleProvider);
-    const user = userCredential.user;
-    const token = await user.getIdToken();
-    store.commit('setAuthToken', token);
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
 
-    const userDoc = doc(firestore, 'users', user.uid);
-    const docSnap = await getDoc(userDoc);
+    const userDocRef = doc(firestore, "users", user.uid);
+    const userDocSnapshot = await getDoc(userDocRef);
 
-    if (!docSnap.exists()) {
-      await setDoc(userDoc, {
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        userName: user.userName || '',
-        emailAddress: user.emailAddress,
-        phoneNumber: user.phoneNumber || '',
-        avatarUrl: user.photoURL || '',
-      });
+    if (userDocSnapshot.exists()) {
+      const userData = userDocSnapshot.data();
+      const requiredFields = ['createdAt', 'dateOfBirth', 'emailAddress', 'firstName', 'lastName', 'country', 'phoneNumber', 'updatedAt'];
+      const missingFields = requiredFields.filter(field => !userData[field]);
+
+      if (missingFields.length === 0) {
+        return { user, userData };
+      } else {
+        return { user, missingFields };
+      }
+    } else {
+      const additionalDetails = {
+        // Add any additional details you want to set for new users
+      };
+      await setDoc(doc(firestore, "users", user.uid), additionalDetails);
+      return { user };
     }
-
-    store.commit('setUser', {
-      uid: user.uid,
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
-      userName: user.userName || '',
-      emailAddress: user.emailAddress,
-      phoneNumber: user.phoneNumber || '',
-      avatarUrl: user.photoURL || '',
-    });
-
-    router.push('/home');
   } catch (error) {
-    console.error('Error signing in with Google:', error);
+    console.error(error);
     throw error;
   }
 };
 
+export const checkAdminStatus = async (user, store) => {
+  try {
+    const adminEmail = import.meta.env.VITE_ADMIN_EMAIL;
+
+    if (user) {
+      const userEmail = user.email;
+      const isAdmin = userEmail === adminEmail;
+
+      store.commit('SET_IS_ADMIN', isAdmin);
+    } else {
+      console.log('User not authenticated.');
+      store.commit('SET_IS_ADMIN', false);
+    }
+  } catch (error) {
+    console.error('Error checking admin status:', error);
+    store.commit('SET_IS_ADMIN', false);
+  }
+};
+
+export const initializeAuth = (store) => {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      try {
+        const userDocRef = doc(firestore, "users", user.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          store.commit('SET_USER', userData);
+          await store.dispatch('fetchUserData');
+          await checkAdminStatus(user, store);
+        } else {
+          console.warn('User data not found in Firestore. Retrying in 2 seconds...');
+          setTimeout(async () => {
+            const retryUserDocSnapshot = await getDoc(userDocRef);
+            if (retryUserDocSnapshot.exists()) {
+              const userData = retryUserDocSnapshot.data();
+              store.commit('SET_USER', userData);
+              await store.dispatch('fetchUserData');
+            } else {
+              console.error('User data not found in Firestore after retry.');
+              store.commit('SET_NEW_USER', true);
+            }
+          }, 2000);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    } else {
+      store.commit('SET_USER', null);
+      store.commit('SET_IS_ADMIN', false);
+    }
+    isAuthenticated.value = !!user;
+  });
+};
+
 export const signOut = async () => {
   try {
-    await auth.signOut();
-    store.commit('clearAuthToken');
-    store.commit('clearUser');
+    await firebaseSignOut(auth);
+    store.dispatch('logoutUser');
     router.push('/login');
   } catch (error) {
     console.error('Error signing out:', error);

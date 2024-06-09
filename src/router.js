@@ -6,6 +6,9 @@ import RedirectHandler from '@/pages/RedirectHandler.vue';
 import store from './store';
 
 const routes = [
+
+  // -------------------------------- ROOT --------------------------------
+
   {
     path: '/',
     alias: ['/', '/index', '', '/home', '/Home'],
@@ -85,15 +88,15 @@ const routes = [
     },
   },
   {
-    path: '/protected',
-    alias: '/protected',
-    name: 'Protected',
-    component: () => import('@/pages/Auth/Protected.vue'),
+    path: '/additionalinfo',
+    alias: '/additional-info',
+    name: 'Additional Info',
+    component: () => import('@/pages/AdditionalInfo.vue'),
     meta: {
-      requiresAuth: true,
-      title: 'Protected',
-      requiresOverlay: true,
-      requiresAuthOverlay: true,
+      requiresAuth: false,
+      title: 'Additional Info',
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
       inProgress: false,
     },
   },
@@ -111,42 +114,6 @@ const routes = [
     },
   },
   {
-    path: '/demo/lcc-powerapps',
-    name: 'Logan City Council PowerApps',
-    component: () => import('@/pages/demos/Demo_LCC_PowerApps.vue'),
-    meta: {
-      requiresAuth: false,
-      title: 'Logan City Council PowerApps',
-      requiresOverlay: true,
-      requiresAuthOverlay: true,
-      inProgress: true,
-    },
-  },
-  {
-    path: '/demo/lms-powerapps',
-    name: 'Lifestyle Mentor Services PowerApps',
-    component: () => import('@/pages/demos/Demo_LMS_PowerApps.vue'),
-    meta: {
-      requiresAuth: false,
-      title: 'Lifestyle Mentor Services PowerApps',
-      requiresOverlay: true,
-      requiresAuthOverlay: true,
-      inProgress: true,
-    },
-  },
-  {
-    path: '/demo/lms-webapp',
-    name: 'Lifestyle Mentor Services Webapp',
-    component: () => import('@/pages/demos/Demo_LMS_Webapp.vue'),
-    meta: {
-      requiresAuth: false,
-      title: 'Lifestyle Mentor Services Webapp',
-      requiresOverlay: true,
-      requiresAuthOverlay: true,
-      inProgress: true,
-    },
-  },
-  {
     path: '/settings',
     alias: '/settings',
     name: 'Settings',
@@ -159,11 +126,66 @@ const routes = [
       inProgress: false,
     },
   },
+
+  // -------------------------------- DEMO --------------------------------
+
+  {
+    path: '/demo/lcc-powerapps',
+    name: 'Logan City Council PowerApps',
+    component: () => import('@/pages/demo/Demo_LCC_PowerApps.vue'),
+    meta: {
+      requiresAuth: false,
+      title: 'Logan City Council PowerApps',
+      requiresOverlay: true,
+      requiresAuthOverlay: true,
+      inProgress: true,
+    },
+  },
+  {
+    path: '/demo/lms-powerapps',
+    name: 'Lifestyle Mentor Services PowerApps',
+    component: () => import('@/pages/demo/Demo_LMS_PowerApps.vue'),
+    meta: {
+      requiresAuth: false,
+      title: 'Lifestyle Mentor Services PowerApps',
+      requiresOverlay: true,
+      requiresAuthOverlay: true,
+      inProgress: true,
+    },
+  },
+  {
+    path: '/demo/lms-webapp',
+    name: 'Lifestyle Mentor Services Webapp',
+    component: () => import('@/pages/demo/Demo_LMS_Webapp.vue'),
+    meta: {
+      requiresAuth: false,
+      title: 'Lifestyle Mentor Services Webapp',
+      requiresOverlay: true,
+      requiresAuthOverlay: true,
+      inProgress: true,
+    },
+  },
+
+  // -------------------------------- AUTH --------------------------------
+  
+  {
+    path: '/auth/home',
+    alias: '/auth/home',
+    name: 'Auth Home',
+    component: () => import('@/pages/auth/Home.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Auth Home',
+      requiresOverlay: true,
+      requiresAuthOverlay: true,
+      inProgress: false,
+    },
+  },
   {
     path: '/auth/functions',
     alias: '/auth/function',
     name: 'Functions',
-    component: () => import('@/pages/Auth/Functions.vue'),
+    component: () => import('@/pages/auth/Functions.vue'),
     meta: {
       requiresAuth: true,
       title: 'Functions',
@@ -171,7 +193,22 @@ const routes = [
       requiresAuthOverlay: true,
       inProgress: false,
     },
+  },  {
+    path: '/auth/protected',
+    alias: '/auth/protected',
+    name: 'Protected',
+    component: () => import('@/pages/auth/Protected.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Protected',
+      requiresOverlay: true,
+      requiresAuthOverlay: true,
+      inProgress: false,
+    },
   },
+
+  // -------------------------------- SYSTEM --------------------------------
+
   {
     path: '/:pathMatch(.*)*',
     name: '404',
@@ -202,8 +239,23 @@ router.beforeEach((to, from, next) => {
       record.components.default = InProgress;
     });
   }
-  if (to.meta.requiresAuth && !store.getters.user) {
-    next('/login');
+
+  if (to.meta.requiresAuth) {
+    const user = store.getters.user;
+
+    if (!user) {
+      next('/login');
+    } else {
+      const requiredFields = ['createdAt', 'userName', 'emailAddress', 'firstName', 'lastName', 'phoneNumber', 'country', 'updatedAt'];
+      const missingFields = requiredFields.filter(field => !user[field]);
+
+      if (missingFields.length > 0) {
+        sessionStorage.setItem('intendedRoute', to.fullPath);
+        next('/additionalinfo');
+      } else {
+        next();
+      }
+    }
   } else {
     next();
   }

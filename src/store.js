@@ -4,43 +4,67 @@ import createPersistedState from 'vuex-persistedstate';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth } from './firebase';
 
-export default createStore({
+const store = createStore({
   state: {
     portfolio: null,
-    authToken: null,
     user: null,
   },
+  getters: {
+    portfolio: (state) => state.portfolio,
+    user: (state) => state.user,
+  },
   mutations: {
-    setPortfolio(state, payload) {
+    SET_LOADING(state, isLoading) {
+      state.isLoading = isLoading;
+    },
+    SET_SETTINGS(state, settings) {
+      state.settings = settings;
+    },
+    SET_PORTFOLIO(state, payload) {
       state.portfolio = payload;
     },
-    updatePortfolio(state, payload) {
+    UPDATE_PORTFOLIO(state, payload) {
       state.portfolio = { ...state.portfolio, ...payload };
     },
-    setAuthToken(state, token) {
-      state.authToken = token;
+    SET_USER(state, userData) {
+      if (userData) {
+        state.user = {
+          uid: userData.uid,
+          userName: userData.userName,
+          emailAddress: userData.emailAddress,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          phoneNumber: userData.phoneNumber,
+          country: userData.country,
+          avatar: userData.avatar,
+          createdAt: userData.createdAt,
+          updatedAt: userData.updatedAt,
+        };
+      } else {
+        state.user = null;
+      }
     },
-    clearAuthToken(state) {
-      state.authToken = null;
+    SET_NEW_USER(state, isNewUser) {
+      state.isNewUser = isNewUser;
     },
-    setUser(state, user) {
-      state.user = user;
+    SET_IS_ADMIN(state, isAdmin) {
+      state.isAdmin = isAdmin;
     },
-    clearUser(state) {
+    CLEAR_USER(state) {
       state.user = null;
     },
   },
   actions: {
     async fetchPortfolio({ commit, state }) {
       if (state.portfolio) {
-        return; // Portfolio data already exists in the store, no need to fetch again
+        return;
       }
       try {
         const docRef = doc(firestore, 'websiteData', 'portfolio');
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const portfolioData = docSnap.data();
-          commit('setPortfolio', portfolioData);
+          commit('SET_PORTFOLIO', portfolioData);
         } else {
           console.log('No portfolio document found in Firestore!');
         }
@@ -52,41 +76,58 @@ export default createStore({
       try {
         const docRef = doc(firestore, 'websiteData', 'portfolio');
         await updateDoc(docRef, payload);
-        commit('updatePortfolio', payload);
+        commit('UPDATE_PORTFOLIO', payload);
       } catch (error) {
         console.error('Error updating portfolio document: ', error);
       }
     },
-    async fetchUser({ commit, state }) {
-      if (state.user) {
-        return; // User data already exists in the store, no need to fetch again
-      }
+    async fetchUserData({ commit }) {
       try {
-        auth.onAuthStateChanged(async (user) => {
-          if (user) {
-            const userDoc = doc(firestore, 'users', user.uid);
-            const docSnap = await getDoc(userDoc);
-            if (docSnap.exists()) {
-              commit('setUser', docSnap.data());
-            }
+        const user = auth.currentUser;
+        if (user) {
+          const authUID = user.uid;
+          const userDocRef = doc(firestore, "users", authUID);
+          const userDocSnap = await getDoc(userDocRef);
+          if (userDocSnap.exists()) {
+            const userData = userDocSnap.data();
+            const privateData = userData._PRIVATE_ || {};
+
+            commit('SET_USER', {
+              uid: userData.uid,
+              userName: userData.userName,
+              emailAddress: userData.emailAddress,
+              firstName: userData.firstName,
+              lastName: userData.lastName,
+              phoneNumber: userData.phoneNumber,
+              country: userData.country,
+              avatar: userData.avatar,
+              createdAt: userData.createdAt,
+              updatedAt: userData.updatedAt,
+              ...privateData,
+            });
           } else {
-            commit('clearUser');
+            console.error('User data not found in Firestore.');
           }
-        });
+        } else {
+          console.error('User is not authenticated.');
+        }
       } catch (error) {
-        console.error('Error fetching user: ', error);
+        console.error('Error fetching user data:', error);
       }
     },
-  },
-  getters: {
-    portfolio: (state) => state.portfolio,
-    user: (state) => state.user,
-    authToken: (state) => state.authToken,
+    logoutUser({ commit }) {
+      commit('CLEAR_USER');
+      localStorage.removeItem('user');
+      sessionStorage.removeItem('user');
+      console.log('User has been logged out and persisted state cleared.');
+    },
   },
   plugins: [
     createPersistedState({
-      paths: ['authToken', 'user'],
+      paths: ['user'],
       storage: localStorage.getItem('user') ? localStorage : sessionStorage,
     }),
   ],
 });
+
+export default store;

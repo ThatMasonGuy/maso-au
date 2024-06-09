@@ -15,7 +15,7 @@ const createUser = functions.https.onRequest(async (req, res) => {
     }
 
     console.log('Received create user request');
-    const { firstName, lastName, userName, emailAddress, phoneNumber, avatarUrl, password } = req.body;
+    const { firstName, lastName, userName, emailAddress, phoneNumber, country, avatarUrl, password } = req.body;
 
     console.log('User data:', {
         firstName,
@@ -23,11 +23,11 @@ const createUser = functions.https.onRequest(async (req, res) => {
         userName,
         emailAddress,
         phoneNumber,
+        country,
         avatarUrl,
-        password,
     });
 
-    if (!firstName || !lastName || !userName || !emailAddress || !phoneNumber || !password) {
+    if (!firstName || !lastName || !userName || !emailAddress || !phoneNumber || !country || !password) {
         console.log('Missing required fields');
         res.status(400).send('Missing required fields');
         return;
@@ -52,6 +52,7 @@ const createUser = functions.https.onRequest(async (req, res) => {
         const userRecord = await admin.auth().createUser({
             email: emailAddress,
             password: password,
+            phone: phoneNumber,
             displayName: `${firstName} ${lastName}`,
             photoURL: avatarUrl,
         });
@@ -66,6 +67,8 @@ const createUser = functions.https.onRequest(async (req, res) => {
           emailAddress,
           phoneNumber,
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          country,
         };
       
         if (avatarUrl) {
