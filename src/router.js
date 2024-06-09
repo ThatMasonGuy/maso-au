@@ -5,10 +5,7 @@ import Settings from '@/pages/Settings.vue';
 import RedirectHandler from '@/pages/RedirectHandler.vue';
 import store from './store';
 
-const routes = [
-
-  // -------------------------------- ROOT --------------------------------
-
+export const routes = [
   {
     path: '/',
     alias: ['/', '/index', '', '/home', '/Home'],
@@ -126,9 +123,6 @@ const routes = [
       inProgress: false,
     },
   },
-
-  // -------------------------------- DEMO --------------------------------
-
   {
     path: '/demo/lcc-powerapps',
     name: 'Logan City Council PowerApps',
@@ -165,9 +159,6 @@ const routes = [
       inProgress: true,
     },
   },
-
-  // -------------------------------- AUTH --------------------------------
-  
   {
     path: '/auth/home',
     alias: '/auth/home',
@@ -193,7 +184,8 @@ const routes = [
       requiresAuthOverlay: true,
       inProgress: false,
     },
-  },  {
+  },
+  {
     path: '/auth/protected',
     alias: '/auth/protected',
     name: 'Protected',
@@ -206,9 +198,6 @@ const routes = [
       inProgress: false,
     },
   },
-
-  // -------------------------------- SYSTEM --------------------------------
-
   {
     path: '/:pathMatch(.*)*',
     name: '404',
@@ -259,6 +248,31 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+
+  // Handle dynamic meta tags
+  const nearestWithTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title);
+  const nearestWithMeta = to.matched.slice().reverse().find(r => r.meta && r.meta.metaTags);
+
+  if (nearestWithTitle) document.title = nearestWithTitle.meta.title;
+
+  Array.from(document.querySelectorAll('[data-vue-router-controlled]')).map(el => el.parentNode.removeChild(el));
+
+  if (!nearestWithMeta) return next();
+
+  nearestWithMeta.meta.metaTags.map(tagDef => {
+    const tag = document.createElement('meta');
+
+    Object.keys(tagDef).forEach(key => {
+      tag.setAttribute(key, tagDef[key]);
+    });
+
+    tag.setAttribute('data-vue-router-controlled', '');
+
+    return tag;
+  })
+  .forEach(tag => document.head.appendChild(tag));
+
+  next();
 });
 
 export default router;
