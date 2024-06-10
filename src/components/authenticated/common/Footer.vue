@@ -5,8 +5,8 @@
         <p class="pr-4">&copy; 2024 Mason Bartholomai. All rights reserved.</p>
         <div class="mr-2 flex items-center">
             <p class="mr-4">Website Views: {{ viewCount }}</p>
-            <component is="Cog8ToothIcon" class="w-6 h-6 inline-block mr-2 cursor-pointer" @click="showSettings" />
-            <component is="QuestionMarkCircleIcon" class="w-6 h-6 inline-block cursor-pointer" />
+            <Cog8ToothIcon class="w-6 h-6 inline-block mr-2 cursor-pointer" @click="showSettings" />
+            <QuestionMarkCircleIcon class="w-6 h-6 inline-block cursor-pointer" />
         </div>
     </footer>
 </template>

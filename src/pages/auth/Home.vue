@@ -1,6 +1,7 @@
 <!-- @/pages/auth/Home.vue -->
 <template>
-  <div class="min-h-[--adjusted-height] pt-12 bg-gradient-to-br from-background-950 from-20% via-background-800 to-background-600">
+  <div
+    class="min-h-[--adjusted-height] pt-12 bg-gradient-to-br from-background-950 from-20% via-background-800 to-background-600">
     <div class="container mx-auto px-4 py-12">
       <h1 class="text-4xl font-bold mb-8 text-center text-[var(--text-50)]">
         Welcome to Maso.au
@@ -44,10 +45,20 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'AuthHome'
-};
+<script setup>
+import { ref, onMounted, computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const homeData = computed(() => store.state.homeData);
+
+onMounted(() => {
+  try {
+    store.dispatch('fetchHomeData');
+  } catch (error) {
+    console.error(error);
+  }
+});
 </script>
 
 <style scoped>

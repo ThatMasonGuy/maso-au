@@ -39,9 +39,9 @@
                         </router-link>
                     </li>
                     <li class="sm:mx-1 my-2 sm:my-0">
-                        <router-link :to="{ path: '/auth/protected' }">
-                            <Button variant="link" :class="{ underline: currentPageTitle === 'Protected' }"
-                                class="px-1 lg:px-2">Protected</Button>
+                        <router-link :to="{ path: '/auth/dashboard' }">
+                            <Button variant="link" :class="{ underline: currentPageTitle === 'Dashboard' }"
+                                class="px-1 lg:px-2">Dashboard</Button>
                         </router-link>
                     </li>
                     <li class="sm:mx-1 my-2 sm:my-0">
@@ -83,22 +83,36 @@
                 </router-link>
             </div>
             <ul class="flex flex-col text-2xl items-start font-bold text-[--text-50] space-y-8 mt-8 px-2">
-                <li>
-                    <router-link to="/home" @click="toggleMenu"><Button variant="link"
-                            :class="{ underline: currentPageTitle === 'Home' }">Home</Button></router-link>
-                </li>
-                <li>
-                    <router-link to="/contact" @click="toggleMenu"><Button variant="link"
-                            :class="{ underline: currentPageTitle === 'Contact' }">Contact</Button></router-link>
-                </li>
-                <li>
-                    <router-link to="/portfolio" @click="toggleMenu"><Button variant="link"
-                            :class="{ underline: currentPageTitle === 'Portfolio' }">Portfolio</Button></router-link>
-                </li>
-                <li>
-                    <router-link to="/websites" @click="toggleMenu"><Button variant="link"
-                            :class="{ underline: currentPageTitle === 'Websites' }">Websites</Button></router-link>
-                </li>
+                <li class="sm:mx-1 my-2 sm:my-0">
+                        <router-link :to="{ path: '/auth/home' }">
+                            <Button variant="link" :class="{ underline: currentPageTitle === 'Auth Home' }"
+                                class="px-1 lg:px-2">Home</Button>
+                        </router-link>
+                    </li>
+                    <li class="sm:mx-1 my-2 sm:my-0">
+                        <router-link :to="{ path: '/auth/functions' }">
+                            <Button variant="link" :class="{ underline: currentPageTitle === 'Functions' }"
+                                class="px-1 lg:px-2">Functions</Button>
+                        </router-link>
+                    </li>
+                    <li class="sm:mx-1 my-2 sm:my-0">
+                        <router-link :to="{ path: '/portfolio' }">
+                            <Button variant="link" :class="{ underline: currentPageTitle === 'Portfolio' }"
+                                class="px-1 lg:px-2">Portfolio</Button>
+                        </router-link>
+                    </li>
+                    <li class="sm:mx-1 my-2 sm:my-0">
+                        <router-link :to="{ path: '/auth/dashboard' }">
+                            <Button variant="link" :class="{ underline: currentPageTitle === 'Dashboard' }"
+                                class="px-1 lg:px-2">Dashboard</Button>
+                        </router-link>
+                    </li>
+                    <li class="sm:mx-1 my-2 sm:my-0">
+                        <router-link :to="{ path: '/websites' }">
+                            <Button variant="link" :class="{ underline: currentPageTitle === 'Websites' }"
+                                class="px-1 lg:px-2">Websites</Button>
+                        </router-link>
+                    </li>
             </ul>
         </div>
     </header>

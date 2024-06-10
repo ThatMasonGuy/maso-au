@@ -47,7 +47,6 @@ import CoinFlip from '@/components/authenticated/functions/CoinFlip.vue'
 import DiceRoll from '@/components/authenticated/functions/DiceRoll.vue'
 import TicTacToe from '@/components/authenticated/functions/TicTacToe.vue'
 import Calculator from '@/components/authenticated/functions/Calculator.vue'
-import Chat from '@/components/authenticated/functions/Chat.vue'
 import CodeSnippet from '@/components/authenticated/functions/CodeSnippet.vue'
 import CurrencyConvertor from '@/components/authenticated/functions/CurrencyConvertor.vue'
 import EventCountdown from '@/components/authenticated/functions/EventCountdown.vue'
@@ -71,17 +70,16 @@ const components = [
     { id: 3, name: DiceRoll, active: true, complete: true },
     { id: 4, name: TicTacToe, active: true, complete: true },
     { id: 5, name: Calculator, active: true, complete: false },
-    { id: 6, name: Chat, active: true, complete: false },
-    { id: 7, name: CodeSnippet, active: true, complete: false },
-    { id: 8, name: CurrencyConvertor, active: true, complete: false },
-    { id: 9, name: EventCountdown, active: true, complete: false },
-    { id: 10, name: StockTracker, active: true, complete: false },
-    { id: 11, name: TimezoneConvertor, active: true, complete: false },
-    { id: 12, name: UnitConvertor, active: true, complete: false },
-    { id: 13, name: PasswordGenerator, active: true, complete: false },
-    { id: 14, name: MusicPlayer, active: true, complete: false },
-    { id: 15, name: ToDo, active: true, complete: false },
-    { id: 16, name: Weather, active: true, complete: false },
+    { id: 6, name: CodeSnippet, active: true, complete: false },
+    { id: 7, name: CurrencyConvertor, active: true, complete: false },
+    { id: 8, name: EventCountdown, active: true, complete: false },
+    { id: 9, name: StockTracker, active: true, complete: false },
+    { id: 10, name: TimezoneConvertor, active: true, complete: false },
+    { id: 11, name: UnitConvertor, active: true, complete: false },
+    { id: 12, name: PasswordGenerator, active: true, complete: false },
+    { id: 13, name: MusicPlayer, active: true, complete: false },
+    { id: 14, name: ToDo, active: true, complete: false },
+    { id: 15, name: Weather, active: true, complete: false },
 ];
 
 const openComponentId = ref(null);

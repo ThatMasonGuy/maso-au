@@ -4,65 +4,47 @@
     <nav class="w-full">
       <div class="flex items-center justify-between w-full">
         <div class="flex items-center">
-          <img
-            src="@/assets/favicon.jpg"
-            alt="Logo image"
+          <img src="@/assets/favicon.jpg" alt="Logo image"
             class="sm:h-12 h-10 sm:w-12 w-10 object-cover cursor-pointer rounded-full shadow-xl"
-            @click="$router.push('/')"
-          />
+            @click="$router.push('/')" />
           <span
-            class="sm:text-3xl text-2xl font-bold absolute sm:ml-16 ml-14 text-[--text-50] drop-shadow-[0_5px_30px_rgba(255,255,255,0.35)]"
-            >{{ currentPageTitle }}</span
-          >
+            class="sm:text-3xl text-2xl font-bold absolute sm:ml-16 ml-14 text-[--text-50] drop-shadow-[0_5px_30px_rgba(255,255,255,0.35)]">{{
+              currentPageTitle }}</span>
         </div>
-        <button @click="toggleMenu" class="sm:hidden focus:outline-none">
-          <svg
-            class="w-8 h-8 text-[--text-50]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16m-7 6h7"
-            />
+        <button @click="toggleMenu" class="sm:hidden focus:outline-none mr-2">
+          <svg class="w-8 h-8 text-[--text-50]" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
           </svg>
         </button>
         <ul class="hidden sm:flex text-md lg:text-xl items-center font-bold text-[--text-50]">
           <li class="sm:mx-1 my-2 sm:my-0">
             <router-link :to="{ path: '/home' }">
-              <Button variant="link" :class="{ underline: currentPageTitle === 'Home' }" class="px-1 lg:px-2"
-                >Home</Button
-              >
+              <Button variant="link" :class="{ underline: currentPageTitle === 'Home' }"
+                class="px-1 lg:px-2">Home</Button>
             </router-link>
           </li>
           <li class="sm:mx-1 my-2 sm:my-0">
             <router-link :to="{ path: '/contact' }">
-              <Button variant="link" :class="{ underline: currentPageTitle === 'Contact' }" class="px-1 lg:px-2"
-                >Contact</Button
-              >
+              <Button variant="link" :class="{ underline: currentPageTitle === 'Contact Us' }"
+                class="px-1 lg:px-2">Contact us</Button>
             </router-link>
           </li>
           <li class="sm:mx-1 my-2 sm:my-0">
             <router-link :to="{ path: '/portfolio' }">
-              <Button variant="link" :class="{ underline: currentPageTitle === 'Portfolio' }" class="px-1 lg:px-2"
-                >Portfolio</Button
-              >
+              <Button variant="link" :class="{ underline: currentPageTitle === 'Portfolio' }"
+                class="px-1 lg:px-2">Portfolio</Button>
             </router-link>
           </li>
           <li class="sm:mx-1 my-2 sm:my-0">
             <router-link :to="{ path: '/websites' }">
-              <Button variant="link" :class="{ underline: currentPageTitle === 'Websites' }" class="mr-4 px-1 lg:px-2"
-                >Websites</Button
-              >
+              <Button variant="link" :class="{ underline: currentPageTitle === 'Websites' }"
+                class="mr-4 px-1 lg:px-2">Websites</Button>
             </router-link>
           </li>
           <li class="sm:mx-1 my-2 sm:my-0">
             <a @click="handleAvatarClick">
-              <Avatar class="h-10 w-10">
+              <Avatar class="h-10 w-10 mr-2">
                 <AvatarFallback>
                   <UserCircleIcon class="h-8 w-8" />
                 </AvatarFallback>
@@ -73,11 +55,9 @@
       </div>
     </nav>
     <div v-if="isMenuOpen" class="fixed inset-0 bg-gray-700 bg-opacity-50 z-40 h-screen" @click="toggleMenu"></div>
-    <div
-      v-if="isMenuOpen"
+    <div v-if="isMenuOpen"
       class="fixed z-[9999] top-0 right-0 h-screen bg-[--background-700] shadow-lg transform transition-transform duration-300 ease-in-out w-4/5"
-      :class="{ 'translate-x-full': !isMenuOpen, 'translate-x-0': isMenuOpen }"
-    >
+      :class="{ 'translate-x-full': !isMenuOpen, 'translate-x-0': isMenuOpen }">
       <div class="flex items-center justify-between p-6 bg-[--background-800] h-20">
         <button @click="toggleMenu" class="text-black focus:outline-none">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -94,26 +74,20 @@
       </div>
       <ul class="flex flex-col text-2xl items-start font-bold text-[--text-50] space-y-8 mt-8 px-2">
         <li>
-          <router-link to="/home" @click="toggleMenu"
-            ><Button variant="link" :class="{ underline: currentPageTitle === 'Home' }">Home</Button></router-link
-          >
+          <router-link to="/home" @click="toggleMenu"><Button variant="link"
+              :class="{ underline: currentPageTitle === 'Home' }">Home</Button></router-link>
         </li>
         <li>
-          <router-link to="/contact" @click="toggleMenu"
-            ><Button variant="link" :class="{ underline: currentPageTitle === 'Contact' }">Contact</Button></router-link
-          >
+          <router-link to="/contact" @click="toggleMenu"><Button variant="link"
+              :class="{ underline: currentPageTitle === 'Contact Us' }">Contact us</Button></router-link>
         </li>
         <li>
-          <router-link to="/portfolio" @click="toggleMenu"
-            ><Button variant="link" :class="{ underline: currentPageTitle === 'Portfolio' }"
-              >Portfolio</Button
-            ></router-link
-          >
+          <router-link to="/portfolio" @click="toggleMenu"><Button variant="link"
+              :class="{ underline: currentPageTitle === 'Portfolio' }">Portfolio</Button></router-link>
         </li>
         <li>
-          <router-link to="/websites" @click="toggleMenu"
-            ><Button variant="link" :class="{ underline: currentPageTitle === 'Websites' }">Websites</Button></router-link
-          >
+          <router-link to="/websites" @click="toggleMenu"><Button variant="link"
+              :class="{ underline: currentPageTitle === 'Websites' }">Websites</Button></router-link>
         </li>
       </ul>
     </div>

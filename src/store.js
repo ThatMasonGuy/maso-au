@@ -8,10 +8,20 @@ const store = createStore({
   state: {
     portfolio: null,
     user: null,
+    homeData: null,
+    settings: null,
+    isLoading: false,
+    isNewUser: false,
+    isAdmin: false,
   },
   getters: {
     portfolio: (state) => state.portfolio,
     user: (state) => state.user,
+    homeData: (state) => state.homeData,
+    settings: (state) => state.settings,
+    isLoading: (state) => state.isLoading,
+    isNewUser: (state) => state.isNewUser,
+    isAdmin: (state) => state.isAdmin,
   },
   mutations: {
     SET_LOADING(state, isLoading) {
@@ -22,6 +32,9 @@ const store = createStore({
     },
     SET_PORTFOLIO(state, payload) {
       state.portfolio = payload;
+    },
+    SET_HOME_DATA(state, payload) {
+      state.homeData = payload;
     },
     UPDATE_PORTFOLIO(state, payload) {
       state.portfolio = { ...state.portfolio, ...payload };
@@ -79,6 +92,23 @@ const store = createStore({
         commit('UPDATE_PORTFOLIO', payload);
       } catch (error) {
         console.error('Error updating portfolio document: ', error);
+      }
+    },
+    async fetchHomeData({ commit, state }) {
+      if (state.homeData) {
+        return;
+      }
+      try {
+        const docRef = doc(firestore, 'websiteData', 'home');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const homeDataLive = docSnap.data();
+          commit('SET_HOME_DATA', homeDataLive);
+        } else {
+          console.log('No home document found in Firestore!');
+        }
+      } catch (error) {
+        console.error('Error fetching home document: ', error);
       }
     },
     async fetchUserData({ commit }) {
