@@ -20,83 +20,76 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from 'vue';
 
-export default {
-  setup() {
-    const links = ref([
-      {
-        title: "Mxn",
-        url: "https://mxn.au",
-        description: "Description of Mxn website",
-      },
-      {
-        title: "Xbx",
-        url: "https://xbx.au",
-        description: "Description of Xbx website",
-      },
-      {
-        title: "Maso",
-        url: "https://maso.au",
-        description: "Description of Maso website",
-      },
-      {
-        title: "Dxv",
-        url: "https://dxv.ai",
-        description: "Description of Dxv website",
-      },
-      {
-        title: "Tempest Games",
-        url: "https://tempestgames.au",
-        description: "Description of Tempest Games website",
-      },
-      {
-        title: "Studio Tempest",
-        url: "https://studio-tempest.com",
-        description: "Description of Studio Tempest website",
-      },
-      {
-        title: "That Mason Guy",
-        url: "https://thatmasonguy.com",
-        description: "Description of That Mason Guy website",
-      },
-    ]);
+const links = ref([
+  {
+    title: "Mxn",
+    url: "https://mxn.au",
+    description: "Description of Mxn website",
+  },
+  {
+    title: "Xbx",
+    url: "https://xbx.au",
+    description: "Description of Xbx website",
+  },
+  {
+    title: "Maso",
+    url: "https://maso.au",
+    description: "Description of Maso website",
+  },
+  {
+    title: "Dxv",
+    url: "https://dxv.ai",
+    description: "Description of Dxv website",
+  },
+  {
+    title: "Tempest Games",
+    url: "https://tempestgames.au",
+    description: "Description of Tempest Games website",
+  },
+  {
+    title: "Studio Tempest",
+    url: "https://studio-tempest.com",
+    description: "Description of Studio Tempest website",
+  },
+  {
+    title: "That Mason Guy",
+    url: "https://thatmasonguy.com",
+    description: "Description of That Mason Guy website",
+  },
+]);
 
-    const colors = [
-      "bg-red-500",
-      "bg-blue-500",
-      "bg-green-500",
-      "bg-yellow-500",
-      "bg-indigo-500",
-      "bg-purple-500",
-      "bg-pink-500",
-      "bg-gray-500",
-      "bg-teal-500",
-      "bg-cyan-500",
-    ];
+const colors = [
+  "bg-red-500",
+  "bg-blue-500",
+  "bg-green-500",
+  "bg-yellow-500",
+  "bg-indigo-500",
+  "bg-purple-500",
+  "bg-pink-500",
+  "bg-gray-500",
+  "bg-teal-500",
+  "bg-cyan-500",
+];
 
-    const shuffleArray = (array) => {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-    };
-
-    const assignRandomColors = () => {
-      shuffleArray(colors);
-      links.value = links.value.map((link, index) => {
-        return { ...link, color: colors[index % colors.length] };
-      });
-    };
-
-    onMounted(() => {
-      assignRandomColors();
-    });
-
-    return {
-      links,
-    };
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
 };
+
+const assignRandomColors = () => {
+  shuffleArray(colors);
+  links.value = links.value.map((link, index) => {
+    return { ...link, color: colors[index % colors.length] };
+  });
+};
+
+onMounted(() => {
+  assignRandomColors();
+});
+
 </script>

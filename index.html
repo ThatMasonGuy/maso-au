@@ -6,16 +6,30 @@
   <link rel="icon" type="image/jpg" href="/favicon.jpg" class="rounded-full" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
-    rel="stylesheet">
+  
+  <!-- Preload critical fonts -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" />
+  </noscript>
+  
+  <!-- Preload critical images -->
+  <link rel="preload" as="image" href="https://firebasestorage.googleapis.com/v0/b/maso-au.appspot.com/o/website%2Fhome%2Fimages%2Fnature%2FImage%20(1).jpg?alt=media&token=bd4010f8-1167-45ae-a9eb-c1fd9ae03092">
+  <link rel="preload" as="image" href="https://firebasestorage.googleapis.com/v0/b/maso-au.appspot.com/o/website%2Fhome%2Fimages%2Fnature%2FImage%20(2).jpg?alt=media&token=be618360-cafd-41b6-bacb-d259c835cfe3">
+  <link rel="preload" as="image" href="https://firebasestorage.googleapis.com/v0/b/maso-au.appspot.com/o/website%2Fhome%2Fimages%2Fnature%2FImage%20(3).jpg?alt=media&token=7c6e1b8b-d66d-4551-927e-fae69ce4c0cf">
+  <link rel="preload" as="image" href="https://firebasestorage.googleapis.com/v0/b/maso-au.appspot.com/o/website%2Fhome%2Fimages%2Fnature%2FImage%20(4).jpg?alt=media&token=7e0c4a21-131f-4074-90eb-d9a9d4a20e11">
+  <link rel="preload" as="image" href="https://firebasestorage.googleapis.com/v0/b/maso-au.appspot.com/o/website%2Fhome%2Fimages%2Fnature%2FImage%20(5).jpg?alt=media&token=894c51ce-c597-4540-9d1a-2d7e08e36b68">
+  <link rel="preload" as="image" href="https://firebasestorage.googleapis.com/v0/b/maso-au.appspot.com/o/website%2Fhome%2Fimages%2Fnature%2FImage%20(6).jpg?alt=media&token=55a4a66d-0b82-447a-9204-08fa3080839f">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maso.au</title>
 </head>
 
 <body>
   <div id="app"></div>
-  <script type="module" src="/src/main.js"></script>
+  <!-- Defer non-critical JavaScript -->
+  <script type="module" src="/src/main.js" defer></script>
 </body>
 
 </html>

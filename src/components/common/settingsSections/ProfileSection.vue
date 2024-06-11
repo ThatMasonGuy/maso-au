@@ -41,7 +41,8 @@
   </template>
   
   <script setup>
-  import { Avatar, AvatarFallback, AvatarImage, Label } from '@/components/ui';
+  import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+  import { Label } from '@/components/ui/label';
   import { useStore } from 'vuex';
 
   const store = useStore();

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { InProgress } from '@/components';
+import InProgress from '@/components/InProgress.vue';
 import Home from '@/pages/Home.vue';
 import Settings from '@/pages/Settings.vue';
 import RedirectHandler from '@/pages/RedirectHandler.vue';

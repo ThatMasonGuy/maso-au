@@ -146,7 +146,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted, computed } from 'vue';
 import jsPDF from 'jspdf';
 import { useStore } from 'vuex';
@@ -168,193 +168,165 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
-export default {
-  components: {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-  },
-  setup() {
-    const store = useStore();
-    const isDialogOpen = ref(false);
-    const portfolio = computed(() => store.state.portfolio);
+const store = useStore();
+const isDialogOpen = ref(false);
+const portfolio = computed(() => store.state.portfolio);
 
-    onMounted(() => {
-      try {
-        store.dispatch('fetchPortfolio');
-      } catch (error) {
-        console.error(error);
-      }
-    });
-
-    const openDialog = () => {
-      isDialogOpen.value = true;
-    };
-
-    const closeDialog = () => {
-      isDialogOpen.value = false;
-    };
-
-    const formatDate = (date) => {
-      if (date && date.seconds) {
-        return moment(date.seconds * 1000).format('MMMM YYYY');
-      }
-      return 'Present';
-    };
-
-    const sortItemsByEndDate = (items) => {
-      if (items && typeof items === 'object') {
-        items = Object.values(items);
-      }
-      if (!Array.isArray(items)) {
-        console.error('Expected an array of items, but got:', items);
-        return [];
-      }
-
-      items.sort((a, b) => {
-        const endA = a.duration?.end?.seconds || Infinity;
-        const endB = b.duration?.end?.seconds || Infinity;
-
-        return endB - endA;
-      });
-
-      return items;
-    };
-
-    const sortedWorkExperience = computed(() => {
-      const workExperience = portfolio.value?.workExperience?.options;
-      const sorted = sortItemsByEndDate(workExperience);
-      return sorted;
-    });
-
-    const sortedEducation = computed(() => {
-      const education = portfolio.value?.education?.options;
-      const sorted = sortItemsByEndDate(education);
-      return sorted;
-    });
-
-    const generatePDF = () => {
-      if (!portfolio.value || !portfolio.value.details || !portfolio.value.contact || !portfolio.value.contact.options || typeof portfolio.value.contact.options !== 'object' || !portfolio.value.skills || !portfolio.value.skills.options) {
-        console.error("Portfolio data is not structured as expected or missing some parts.");
-        console.log("portfolio.value:", portfolio.value);
-        return;
-      }
-
-      const { name, title } = portfolio.value.details;
-      const contact = portfolio.value.contact.options;
-      const skills = portfolio.value.skills.options;
-      const topThreeWorkExperience = sortedWorkExperience.value.slice(0, 3);
-      const education = sortedEducation.value;
-
-      const doc = new jsPDF();
-
-      // Header
-      doc.setFontSize(20);
-      doc.setFont(undefined, 'bold');
-      doc.text(`${name.firstName} ${name.lastName}`, 10, 10);
-      doc.setFontSize(16);
-      doc.setFont(undefined, 'normal');
-      doc.text(title, 10, 20);
-
-      // Sidebar - Contact Information
-      let sidebarX = 150;
-      let sidebarY = 30;
-      doc.setFontSize(12);
-      doc.setFont(undefined, 'bold');
-      doc.text('Contact Information', sidebarX, sidebarY);
-      sidebarY += 10;
-      doc.setFont(undefined, 'normal');
-      Object.values(contact).forEach((con) => {
-        doc.text(`${con.title}: ${con.link}`, sidebarX, sidebarY);
-        sidebarY += 10;
-      });
-
-      // Sidebar - Skills
-      sidebarY += 10;
-      doc.setFontSize(12);
-      doc.setFont(undefined, 'bold');
-      doc.text('Skills', sidebarX, sidebarY);
-      sidebarY += 10;
-      doc.setFont(undefined, 'normal');
-      skills.forEach((skill) => {
-        doc.text(skill, sidebarX, sidebarY);
-        sidebarY += 10;
-      });
-
-      // Sidebar - References Header
-      sidebarY += 10;
-      doc.setFontSize(12);
-      doc.setFont(undefined, 'bold');
-      doc.text('References', sidebarX, sidebarY);
-
-      // Main Content - Work Experience
-      let mainContentY = 40;
-      doc.setFontSize(16);
-      doc.setFont(undefined, 'bold');
-      doc.text('Work Experience', 10, mainContentY);
-      doc.setFont(undefined, 'normal');
-      mainContentY += 10;
-      topThreeWorkExperience.forEach((job, index) => {
-        doc.setFontSize(14);
-        doc.setFont(undefined, 'bold');
-        mainContentY += 10;
-        doc.text(`${job.title} at ${job.company}`, 10, mainContentY);
-        mainContentY += 5;
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'italic');
-        doc.text(`${formatDate(job.duration.start)} - ${job.duration.end ? formatDate(job.duration.end) : 'Present'}`, 10, mainContentY);
-        doc.setFont(undefined, 'normal');
-        job.description.forEach((desc, descIndex) => {
-          mainContentY += 5;
-          doc.text(`- ${desc}`, 10, mainContentY);
-        });
-        mainContentY += 10;
-      });
-
-      // Main Content - Education
-      mainContentY += 10;
-      doc.setFontSize(16);
-      doc.setFont(undefined, 'bold');
-      doc.text('Education', 10, mainContentY);
-      doc.setFont(undefined, 'normal');
-      mainContentY += 10;
-      education.forEach((edu, index) => {
-        doc.setFontSize(14);
-        doc.setFont(undefined, 'bold');
-        mainContentY += 10;
-        doc.text(`${edu.title} at ${edu.school}`, 10, mainContentY);
-        mainContentY += 5;
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'italic');
-        doc.text(`${formatDate(edu.duration.start)} - ${edu.duration.end ? formatDate(edu.duration.end) : 'Present'}`, 10, mainContentY);
-        mainContentY += 5;
-        doc.setFont(undefined, 'normal');
-        doc.text(`${edu.description}`, 10, mainContentY);
-        mainContentY += 10;
-      });
-
-      doc.save('Mason-Bartholomai-Resume.pdf');
-    };
-
-    return {
-      portfolio,
-      isDialogOpen,
-      openDialog,
-      closeDialog,
-      formatDate,
-      sortedWorkExperience,
-      sortedEducation,
-      generatePDF,
-    }
+onMounted(() => {
+  try {
+    store.dispatch('fetchPortfolio');
+  } catch (error) {
+    console.error(error);
   }
-}
+});
+
+const openDialog = () => {
+  isDialogOpen.value = true;
+};
+
+const closeDialog = () => {
+  isDialogOpen.value = false;
+};
+
+const formatDate = (date) => {
+  if (date && date.seconds) {
+    return moment(date.seconds * 1000).format('MMMM YYYY');
+  }
+  return 'Present';
+};
+
+const sortItemsByEndDate = (items) => {
+  if (items && typeof items === 'object') {
+    items = Object.values(items);
+  }
+  if (!Array.isArray(items)) {
+    console.error('Expected an array of items, but got:', items);
+    return [];
+  }
+
+  items.sort((a, b) => {
+    const endA = a.duration?.end?.seconds || Infinity;
+    const endB = b.duration?.end?.seconds || Infinity;
+
+    return endB - endA;
+  });
+
+  return items;
+};
+
+const sortedWorkExperience = computed(() => {
+  const workExperience = portfolio.value?.workExperience?.options;
+  const sorted = sortItemsByEndDate(workExperience);
+  return sorted;
+});
+
+const sortedEducation = computed(() => {
+  const education = portfolio.value?.education?.options;
+  const sorted = sortItemsByEndDate(education);
+  return sorted;
+});
+
+const generatePDF = () => {
+  if (!portfolio.value || !portfolio.value.details || !portfolio.value.contact || !portfolio.value.contact.options || typeof portfolio.value.contact.options !== 'object' || !portfolio.value.skills || !portfolio.value.skills.options) {
+    console.error("Portfolio data is not structured as expected or missing some parts.");
+    console.log("portfolio.value:", portfolio.value);
+    return;
+  }
+
+  const { name, title } = portfolio.value.details;
+  const contact = portfolio.value.contact.options;
+  const skills = portfolio.value.skills.options;
+  const topThreeWorkExperience = sortedWorkExperience.value.slice(0, 3);
+  const education = sortedEducation.value;
+
+  const doc = new jsPDF();
+
+  // Header
+  doc.setFontSize(20);
+  doc.setFont(undefined, 'bold');
+  doc.text(`${name.firstName} ${name.lastName}`, 10, 10);
+  doc.setFontSize(16);
+  doc.setFont(undefined, 'normal');
+  doc.text(title, 10, 20);
+
+  // Sidebar - Contact Information
+  let sidebarX = 150;
+  let sidebarY = 30;
+  doc.setFontSize(12);
+  doc.setFont(undefined, 'bold');
+  doc.text('Contact Information', sidebarX, sidebarY);
+  sidebarY += 10;
+  doc.setFont(undefined, 'normal');
+  Object.values(contact).forEach((con) => {
+    doc.text(`${con.title}: ${con.link}`, sidebarX, sidebarY);
+    sidebarY += 10;
+  });
+
+  // Sidebar - Skills
+  sidebarY += 10;
+  doc.setFontSize(12);
+  doc.setFont(undefined, 'bold');
+  doc.text('Skills', sidebarX, sidebarY);
+  sidebarY += 10;
+  doc.setFont(undefined, 'normal');
+  skills.forEach((skill) => {
+    doc.text(skill, sidebarX, sidebarY);
+    sidebarY += 10;
+  });
+
+  // Sidebar - References Header
+  sidebarY += 10;
+  doc.setFontSize(12);
+  doc.setFont(undefined, 'bold');
+  doc.text('References', sidebarX, sidebarY);
+
+  // Main Content - Work Experience
+  let mainContentY = 40;
+  doc.setFontSize(16);
+  doc.setFont(undefined, 'bold');
+  doc.text('Work Experience', 10, mainContentY);
+  doc.setFont(undefined, 'normal');
+  mainContentY += 10;
+  topThreeWorkExperience.forEach((job, index) => {
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    mainContentY += 10;
+    doc.text(`${job.title} at ${job.company}`, 10, mainContentY);
+    mainContentY += 5;
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'italic');
+    doc.text(`${formatDate(job.duration.start)} - ${job.duration.end ? formatDate(job.duration.end) : 'Present'}`, 10, mainContentY);
+    doc.setFont(undefined, 'normal');
+    job.description.forEach((desc, descIndex) => {
+      mainContentY += 5;
+      doc.text(`- ${desc}`, 10, mainContentY);
+    });
+    mainContentY += 10;
+  });
+
+  // Main Content - Education
+  mainContentY += 10;
+  doc.setFontSize(16);
+  doc.setFont(undefined, 'bold');
+  doc.text('Education', 10, mainContentY);
+  doc.setFont(undefined, 'normal');
+  mainContentY += 10;
+  education.forEach((edu, index) => {
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    mainContentY += 10;
+    doc.text(`${edu.title} at ${edu.school}`, 10, mainContentY);
+    mainContentY += 5;
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'italic');
+    doc.text(`${formatDate(edu.duration.start)} - ${edu.duration.end ? formatDate(edu.duration.end) : 'Present'}`, 10, mainContentY);
+    mainContentY += 5;
+    doc.setFont(undefined, 'normal');
+    doc.text(`${edu.description}`, 10, mainContentY);
+    mainContentY += 10;
+  });
+
+  doc.save('Mason-Bartholomai-Resume.pdf');
+};
+
 </script>

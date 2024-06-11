@@ -96,7 +96,8 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
-import { Button, Avatar, AvatarFallback, AvatarImage } from "@/components/ui";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from '@/components/ui/button';
 import { UserCircleIcon } from "@heroicons/vue/24/outline";
 import { toast } from "vue-sonner";
 import { useRoute, useRouter } from "vue-router";

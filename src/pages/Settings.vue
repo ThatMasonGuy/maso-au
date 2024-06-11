@@ -13,7 +13,8 @@
           :class="{ 'bg-gray-700': activePage === 'support' }">Support</a>
         <a @click="activePage = 'about'" class="block p-3 hover:bg-gray-700 rounded"
           :class="{ 'bg-gray-700': activePage === 'about' }">About</a>
-        <Button @click="openLogoutModal" class="fixed bottom-[calc(var(--footer-height)_+_20px)] m-2 bg-yellow-500 text-black rounded">Logout</Button>
+        <Button @click="openLogoutModal"
+          class="fixed bottom-[calc(var(--footer-height)_+_20px)] m-2 bg-yellow-500 text-black rounded">Logout</Button>
       </div>
     </div>
 
@@ -24,7 +25,8 @@
           <h3 class="font-bold text-lg text-gray-50">Confirm Logout</h3>
           <p class="py-4 text-gray-50 mb-10">Are you sure you want to log out?</p>
           <div class="modal-action flex gap-2">
-            <Button @click="logout" class="bg-destructive hover:bg-destructive rounded-md text-gray-50 p-2">Logout</Button>
+            <Button @click="logout"
+              class="bg-destructive hover:bg-destructive rounded-md text-gray-50 p-2">Logout</Button>
             <Button @click="closeLogoutModal" class="bg-hover-2 rounded-md text-gray-50 p-2">Cancel</Button>
           </div>
         </div>
@@ -38,49 +40,34 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
-import { Button } from '@/components/ui';
-import { ProfileSection, AccountSection, SupportSection, AboutSection, GeneralSection } from '@/components';
+import { Button } from '@/components/ui/button';
+import ProfileSection from '@/components/common/settingsSections/ProfileSection.vue';
+import AccountSection from '@/components/common/settingsSections/AccountSection.vue';
+import SupportSection from '@/components/common/settingsSections/SupportSection.vue';
+import AboutSection from '@/components/common/settingsSections/AboutSection.vue';
+import GeneralSection from '@/components/common/settingsSections/GeneralSection.vue';
 
-export default {
-  components: {
-    Button,
-    ProfileSection,
-    AccountSection,
-    SupportSection,
-    AboutSection,
-    GeneralSection,
-  },
-  setup() {
-    const store = useStore();
-    const activePage = ref('general');
-    const modalsOpen = ref({});
 
-    const isAuthenticated = computed(() => store.state.user !== null);
+const store = useStore();
+const activePage = ref('general');
+const modalsOpen = ref({});
 
-    function openLogoutModal() {
-      modalsOpen.value['logout'] = true;
-    }
+const isAuthenticated = computed(() => store.state.user !== null);
 
-    function closeLogoutModal() {
-      modalsOpen.value['logout'] = false;
-    }
+function openLogoutModal() {
+  modalsOpen.value['logout'] = true;
+}
 
-    function logout() {
-      store.dispatch('logout');
-      closeLogoutModal();
-    }
+function closeLogoutModal() {
+  modalsOpen.value['logout'] = false;
+}
 
-    return {
-      activePage,
-      openLogoutModal,
-      closeLogoutModal,
-      modalsOpen,
-      isAuthenticated,
-      logout,
-    };
-  }
-};
+function logout() {
+  store.dispatch('logout');
+  closeLogoutModal();
+}
+
 </script>
