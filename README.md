@@ -69,6 +69,7 @@ Node.js and npm installed on your local machine. You can download it from [nodej
    ```
 
 ## Directory Structure
+```
 maso-au/
 ├── .firebase/                 # Firebase configuration directory
 ├── .vscode/                   # VSCode settings
@@ -88,6 +89,7 @@ maso-au/
 ├── tsconfig.json              # TypeScript configuration
 ├── vite.config.js             # Vite configuration
 └── README.md                  # Project overview (this file)
+```
 ## Contributing
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
