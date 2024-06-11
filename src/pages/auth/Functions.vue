@@ -1,7 +1,7 @@
 <!-- @/pages/auth/Functions.vue -->
 <template>
     <div
-        class="p-5 pt-12 bg-gradient-to-br from-background-950 from-20% via-background-800 to-background-600 min-h-[--adjusted-height]">
+        class="p-5 pt-[--header-height] bg-gradient-to-br from-background-950 from-20% via-background-800 to-background-600 min-h-[--adjusted-height]">
         <div class="pt-8 mb-4 mx-auto">
             <div
                 class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 justify-center">

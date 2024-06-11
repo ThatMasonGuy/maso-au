@@ -16,17 +16,24 @@ import { ref as databaseRef, onValue, runTransaction } from 'firebase/database';
 import { realTimeDb } from '@/firebase';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import { Cog8ToothIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline';
 
+const router = useRouter();
+const store = useStore();
 const viewCount = ref(0);
-
 const viewCountRef = databaseRef(realTimeDb, 'websiteViews');
 
-const router = useRouter();
-
 function showSettings() {
-  router.push('/settings');
+  store.commit('SET_SETTINGS', !store.state.settingsActive);
+
+  if (store.state.settingsActive === true) {
+    router.push('/settings');
+  } else {
+    router.back();
+  }
 }
+
 
 onValue(viewCountRef, (snapshot) => {
   const data = snapshot.val();

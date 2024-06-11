@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mx-auto pb-12 w-full min-h-[--adjusted-height] bg-gradient-to-br from-background-950 from-20% via-background-800 to-background-600 lg:px-28 px-6">
+    class="mx-auto pb-12 pt-[--header-height] w-full min-h-[--adjusted-height] bg-gradient-to-br from-background-950 from-20% via-background-800 to-background-600 lg:px-28 px-6">
     <div class="lg:max-w-4xl mx-auto" v-if="portfolio">
       <div>
         <header class="text-center mb-12 mt-5">

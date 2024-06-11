@@ -1,6 +1,6 @@
 <!-- @/pages/auth/Protected.vue -->
 <template>
-    <div class="min-h-[--adjusted-height] bg-[--background-700] flex-grow">
+    <div class="min-h-[--adjusted-height] pt-[--header-height] bg-[--background-700] flex-grow">
         <HomePanel />
     </div>
 </template>

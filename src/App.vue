@@ -4,7 +4,7 @@
     <Toaster position="bottom-right" richColors />
     <Header v-if="$route.meta.requiresOverlay && !$route.meta.requiresAuth" />
     <AuthHeader v-if="$route.meta.requiresOverlay && $route.meta.requiresAuth" />
-    <router-view class="flex router-view" :class="{'pt-[--header-height]': $route.meta.requiresOverlay}" />
+    <router-view class="flex router-view" />
     <div clas="flex-grow"></div>
     <Footer v-if="$route.meta.requiresOverlay" />
   </div>
