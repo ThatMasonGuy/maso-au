@@ -171,8 +171,8 @@ const store = createStore({
   },
   plugins: [
     createPersistedState({
-      paths: ['user'],
-      storage: localStorage.getItem('user') ? localStorage : sessionStorage,
+      paths: ['user', 'settings', 'portfolio', 'homeData'],
+      storage: localStorage.getItem('user', 'settings', 'portfolio', 'homeData') ? localStorage : sessionStorage,
     }),
   ],
 });
