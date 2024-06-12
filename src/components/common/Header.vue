@@ -1,10 +1,10 @@
 <template>
   <header
-    class="fixed top-0 z-50 backdrop-blur-lg bg-white/10 text-black shadow-2xl flex items-center sm:py-3 px-4 h-20 sm:h-[--header-height] w-screen">
+    class="fixed top-0 z-[9997] backdrop-blur-lg bg-white/10 text-black shadow-2xl flex items-center sm:py-3 px-4 h-20 sm:h-[--header-height] w-screen">
     <nav class="w-full">
       <div class="flex items-center justify-between w-full">
         <div class="flex items-center">
-          <img src="@/assets/favicon.jpg" alt="Logo image"
+          <img src="@/assets/favicon.ico" alt="Logo image"
             class="sm:h-12 h-10 sm:w-12 w-10 object-cover cursor-pointer rounded-full shadow-xl"
             @click="$router.push('/')" />
           <span
@@ -54,7 +54,7 @@
         </ul>
       </div>
     </nav>
-    <div v-if="isMenuOpen" class="fixed inset-0 bg-gray-700 bg-opacity-50 z-40 h-screen" @click="toggleMenu"></div>
+    <div v-if="isMenuOpen" class="fixed inset-0 bg-gray-700 bg-opacity-50 z-[9998] h-screen" @click="toggleMenu"></div>
     <div v-if="isMenuOpen"
       class="fixed z-[9999] top-0 right-0 h-screen bg-[--background-700] shadow-lg transform transition-transform duration-300 ease-in-out w-4/5"
       :class="{ 'translate-x-full': !isMenuOpen, 'translate-x-0': isMenuOpen }">

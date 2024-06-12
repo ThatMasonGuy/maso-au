@@ -4,7 +4,7 @@
     class="min-h-[--adjusted-height] pt-[--header-height] bg-gradient-to-br from-background-950 from-20% via-background-800 to-background-600">
     <div class="container mx-auto px-4 py-12">
       <h1 class="text-4xl font-bold mb-8 text-center text-[var(--text-50)]">
-        Welcome to Maso.au
+        Welcome back! {{ user.userName }}
       </h1>
       <p class="text-center text-lg text-[var(--text-50)] mb-12">
         We're glad to have you back! Explore your personalized dashboard below.
@@ -50,6 +50,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
+const user = computed(() => store.getters.user);
 const homeData = computed(() => store.state.homeData);
 
 onMounted(() => {

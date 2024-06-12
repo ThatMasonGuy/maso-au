@@ -5,7 +5,7 @@
         <nav class="w-full">
             <div class="flex items-center justify-between w-full">
                 <div class="flex items-center">
-                    <img src="@/assets/favicon.jpg" alt="Logo image"
+                    <img src="@/assets/favicon.ico" alt="Logo image"
                         class="sm:h-12 h-10 sm:w-12 w-10 object-cover cursor-pointer rounded-full shadow-xl"
                         @click="$router.push('/auth/home')" />
                     <span

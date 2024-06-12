@@ -29,11 +29,6 @@ import { toast } from 'vue-sonner';
 import { getDoc, setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { useStore } from 'vuex';
 import { firestore } from '@/firebase';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover'
 
 const store = useStore();
 const url = ref('');
@@ -93,6 +88,7 @@ const shortenUrl = async () => {
         newUrl.value = shortenedUrl;
         toast.success('URL successfully shortened');
     } catch (error) {
+        console.error('Error shortening URL:', error);
         toast.error('Failed to shorten URL');
     }
 };

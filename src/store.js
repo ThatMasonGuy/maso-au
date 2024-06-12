@@ -2,7 +2,6 @@ import { createStore } from 'vuex';
 import { firestore } from '@/firebase';
 import createPersistedState from 'vuex-persistedstate';
 import { doc, getDoc } from 'firebase/firestore';
-import { getStorage, ref, listAll, getDownloadURL } from 'firebase/storage';
 import { auth } from './firebase';
 
 const store = createStore({
@@ -104,22 +103,7 @@ const store = createStore({
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const homeDataLive = docSnap.data();
-          const storage = getStorage();
-          const imagesRef = ref(storage, 'website/home/images/nature');
-          const listResult = await listAll(imagesRef);
-
-          const images = await Promise.all(
-            listResult.items.map(async (itemRef, index) => {
-              const url = await getDownloadURL(itemRef);
-              return {
-                image: url,
-                alt: `Nature Image ${index + 1}`,
-              };
-            })
-          );
-
-          homeDataLive.images = images;
-
+          console.log(homeDataLive);
           commit('SET_HOME_DATA', homeDataLive);
         } else {
           console.log('No home document found in Firestore!');
@@ -140,7 +124,7 @@ const store = createStore({
             const privateData = userData._PRIVATE_ || {};
 
             commit('SET_USER', {
-              uid: userData.uid,
+              uid: authUID,
               userName: userData.userName,
               emailAddress: userData.emailAddress,
               firstName: userData.firstName,

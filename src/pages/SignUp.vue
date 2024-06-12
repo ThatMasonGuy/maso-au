@@ -111,7 +111,6 @@ const lastName = ref('');
 const userName = ref('');
 const emailAddress = ref('');
 const phoneNumber = ref('');
-const dateOfBirth = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 const selectedCountry = ref('');
@@ -370,7 +369,6 @@ const handleSignUp = async () => {
       userName: userName.value,
       emailAddress: emailAddress.value,
       phoneNumber: formattedPhoneNumber.value,
-      dateOfBirth: dateOfBirth.value,
       password: password.value,
     });
     console.log('Sign up successful', response.data);

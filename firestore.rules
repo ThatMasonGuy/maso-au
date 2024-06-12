@@ -11,7 +11,7 @@ service cloud.firestore {
 
       // Allow account creation by the Cloud Function
       allow create: if request.auth != null && request.auth.uid == userId ||
-                       request.auth == null && request.resource.data.keys().hasAll(['firstName', 'lastName', 'userName', 'emailAddress', 'phoneNumber', 'dateOfBirth']);
+                       request.auth == null && request.resource.data.keys().hasAll(['firstName', 'lastName', 'userName', 'emailAddress', 'phoneNumber', 'country']);
     }
     
     match /shortenedUrls/{document=**} {

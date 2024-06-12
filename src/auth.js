@@ -160,7 +160,7 @@ export const signInWithGoogle = async () => {
 
     if (userDocSnapshot.exists()) {
       const userData = userDocSnapshot.data();
-      const requiredFields = ['createdAt', 'dateOfBirth', 'emailAddress', 'firstName', 'lastName', 'country', 'phoneNumber', 'updatedAt'];
+      const requiredFields = ['createdAt', 'emailAddress', 'firstName', 'lastName', 'country', 'phoneNumber', 'updatedAt'];
       const missingFields = requiredFields.filter(field => !userData[field]);
 
       if (missingFields.length === 0) {

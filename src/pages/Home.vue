@@ -1,42 +1,53 @@
-<!-- @/pages/Home.vue -->
 <template>
-  <div class="bg-[#0066FF]">
-    <section :class="['absolute overflow-hidden min-h-screen bg-gray-950 carousel-mask shadow-lg', $attrs.class]"
-      v-bind="$attrs">
-      <div class="relative h-screen w-screen overflow-hidden" v-if="!homeData || !homeData.images || !image.loaded">
-        <div class="inset-0 z-10 bg-black opacity-50 blur"></div>
-        <img src="@/assets/heroImage.jpg" alt="Hero Image" class="inset-0 z-8 w-full h-full object-cover" />
+  <section :class="['absolute overflow-hidden min-h-[97vh] carousel-mask', $attrs.class]" v-bind="$attrs">
+    <Carousel :plugins="[plugin]" class="absolute w-full h-full">
+      <CarouselContent>
+        <CarouselItem v-for="(img, index) in images" :key="index">
+          <div class="relative h-[94vh] z-30 overflow-hidden">
+            <div class="absolute inset-0 bg-black z-31 opacity-50 blur"></div>
+            <img :src="img.location" :alt="img.alt" class="absolute z-29 inset-0 w-full h-full object-cover" />
+          </div>
+        </CarouselItem>
+      </CarouselContent>
+    </Carousel>
+    <div v-if="homeData"
+      class="absolute inset-0 flex justify-center items-center text-white text-center z-40 bg-black bg-opacity-30 backdrop-blur-">
+      <div class="p-4">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl z-41 font-bold">{{ homeData.heading }}</h2>
+        <p class="mt-4 text-md sm:text-lg md:text-xl z-42 lg:text-2xl">{{ homeData.body }}</p>
       </div>
-      <Carousel :plugins="[plugin]" class="absolute w-full h-full" v-if="homeData && homeData.images">
-        <CarouselContent>
-          <CarouselItem v-for="(img, index) in homeData.images" :key="index">
-            <div class="relative h-screen overflow-hidden">
-              <div class="absolute inset-0 bg-black opacity-50 blur"></div>
-              <img v-lazy="img.image" :alt="img.alt" class="absolute inset-0 w-full h-full object-cover" />
-            </div>
-          </CarouselItem>
-        </CarouselContent>
-      </Carousel>
-      <Skeleton v-if="!homeData">
-        <div class="p-4">
-          <div class="h-8 bg-gray-700 rounded mb-2"></div>
-          <div class="h-4 bg-gray-700 rounded"></div>
-        </div>
-      </Skeleton>
-      <div v-else
-        class="absolute inset-0 flex justify-center items-center text-white text-center bg-black bg-opacity-30 backdrop-blur-md"
-        v-if="homeData">
-        <div class="p-4">
-          <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">{{ homeData.heading }}</h2>
-          <p class="mt-4 text-md sm:text-lg md:text-xl lg:text-2xl">{{ homeData.body }}</p>
-        </div>
-      </div>
-    </section>
-  </div>
+    </div>
+    <svg class="absolute inset-0 w-full h-full z-50 pointer-events-none" viewBox="0 0 960 1100"
+      preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+      version="1.1">
+      <defs>
+        <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="5" />
+          <feOffset dx="0" dy="0" result="offsetblur" />
+          <feFlood flood-color="rgba(0,0,0,0.7)" />
+          <feComposite in2="offsetblur" operator="in" />
+          <feMerge>
+            <feMergeNode />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <mask id="path-mask">
+          <rect width="101%" height="101%" fill="white" />
+          <path
+            d="M960 0H0V950L22.8 962.5C45.7 975 91.3 1000 137 1012.5C182.7 1025 228.3 1012.5 274 1000C319.7 987.5 365.3 975 411.2 987.5C457 1000 503 1025 548.8 1037.5C594.7 1050 640.3 1037.5 686 1025C731.7 1012.5 777.3 1000 823 987.5C868.7 975 914.3 962.5 937.2 956.25L960 950Z"
+            fill="black" />
+        </mask>
+      </defs>
+      <rect width="101%" height="101%" fill="#0066FF" mask="url(#path-mask)" />
+      <path
+        d="M960 0H0V950L22.8 962.5C45.7 975 91.3 1000 137 1012.5C182.7 1025 228.3 1012.5 274 1000C319.7 987.5 365.3 975 411.2 987.5C457 1000 503 1025 548.8 1037.5C594.7 1050 640.3 1037.5 686 1025C731.7 1012.5 777.3 1000 823 987.5C868.7 975 914.3 962.5 937.2 956.25L960 950Z"
+        fill="none" stroke-linecap="round" stroke-linejoin="miter" filter="url(#dropShadow)" />
+    </svg>
+  </section>
 
   <div class="bg-[#98E278]">
     <AboutSection v-if="homeData && homeData.sections && homeData.sections.aboutMe" :data="homeData.sections.aboutMe" />
-    <svg id="visual" viewBox="0 0 960 120" class="w-full lg:-mt-8" preserve-aspect-ratio="none"
+    <svg id="visual" viewBox="0 0 960 120" class="w-full -mt-[1px] lg:-mt-8" preserve-aspect-ratio="none"
       xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
       <defs>
         <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
@@ -50,7 +61,7 @@
   </div>
 
   <div class="bg-[#98E278]">
-    <GallerySection v-if="homeData && homeData.images" :images="homeData.images" />
+    <GallerySection v-if="homeData" :images="images" />
     <svg id="visual" viewBox="0 0 960 92" class="w-full" preserve-aspect-ratio="none" xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
       <defs>
@@ -67,7 +78,7 @@
   <div class="bg-[#F9A03F]">
     <TimelineSection v-if="homeData && homeData.sections && homeData.sections.timeline"
       :data="homeData.sections.timeline" />
-      <svg id="visual" viewBox="0 0 960 120" class="w-full" preserve-aspect-ratio="none"
+    <svg id="visual" viewBox="0 0 960 120" class="w-full" preserve-aspect-ratio="none"
       xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
       <defs>
         <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
@@ -90,7 +101,6 @@
 import { ref, onMounted, computed, defineAsyncComponent } from 'vue';
 import { useStore } from 'vuex';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
-import { Skeleton } from '@/components/ui/skeleton';
 import Autoplay from 'embla-carousel-autoplay';
 import lazy from '@/utils/lazy';
 
@@ -101,7 +111,18 @@ const TestimonialsSection = defineAsyncComponent(() => import('@/components/comm
 const store = useStore();
 const homeData = computed(() => store.state.homeData);
 const plugin = Autoplay({ delay: 5000 });
-const image = ref({ loaded: false });
+const images = ref([
+  { index: 1, location: new URL('@/assets/landing/nature/image(1).webp', import.meta.url).href, alt: 'Image 1' },
+  { index: 2, location: new URL('@/assets/landing/nature/image(2).webp', import.meta.url).href, alt: 'Image 2' },
+  { index: 3, location: new URL('@/assets/landing/nature/image(3).webp', import.meta.url).href, alt: 'Image 3' },
+  { index: 4, location: new URL('@/assets/landing/nature/image(4).webp', import.meta.url).href, alt: 'Image 4' },
+  { index: 5, location: new URL('@/assets/landing/nature/image(5).webp', import.meta.url).href, alt: 'Image 5' },
+  { index: 6, location: new URL('@/assets/landing/nature/image(6).webp', import.meta.url).href, alt: 'Image 6' },
+  { index: 7, location: new URL('@/assets/landing/nature/image(7).webp', import.meta.url).href, alt: 'Image 7' },
+  { index: 8, location: new URL('@/assets/landing/nature/image(8).webp', import.meta.url).href, alt: 'Image 8' },
+  { index: 9, location: new URL('@/assets/landing/nature/image(9).webp', import.meta.url).href, alt: 'Image 9' },
+  { index: 10, location: new URL('@/assets/landing/nature/image(10).webp', import.meta.url).href, alt: 'Image 10' },
+]);
 
 onMounted(() => {
   store.dispatch('fetchHomeData');
@@ -124,13 +145,10 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  -webkit-mask-image: url('@/assets/maskDividerSvg.svg');
-  mask-image: url('@/assets/maskDividerSvg.svg');
-  -webkit-mask-size: cover;
-  mask-size: cover;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: bottom;
-  mask-position: bottom;
+}
+
+.backdrop-blur- {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 </style>
