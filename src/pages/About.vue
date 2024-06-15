@@ -1,5 +1,4 @@
 <!-- src/pages/About.vue -->
-
 <template>
   <div class="flex flex-col min-h-[--adjusted-height] pt-[--header-height] bg-gradient-to-br from-background-950 from-20% via-background-800 to-background-600">
     <div class="flex-grow container mx-auto px-4 py-8">
@@ -18,7 +17,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-
-</script>

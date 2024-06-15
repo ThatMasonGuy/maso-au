@@ -1,5 +1,5 @@
 // @/utils/urlService.js
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc, arrayUnion, increment } from 'firebase/firestore';
 
 const db = getFirestore();
 
@@ -7,10 +7,19 @@ export const getOriginalUrl = async (id) => {
   const docRef = doc(db, 'shortenedUrls', id);
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
+    await logUrlHit(docRef);
     return docSnap.data().originalUrl;
   } else {
     return null;
   }
+};
+
+const logUrlHit = async (docRef) => {
+  const timestamp = new Date();
+  await updateDoc(docRef, {
+    viewCount: increment(1),
+    viewTimestamps: arrayUnion(timestamp)
+  });
 };
 
 export const joinGame = async (joinCode, userId) => {

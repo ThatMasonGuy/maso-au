@@ -418,6 +418,36 @@ const routes = [
     },
   },
 
+  // -------------------------------- FUNCTIONS --------------------------------
+
+  {
+    path: '/auth/functions/url-shortener',
+    alias: '/auth/functions/url-shortener',
+    name: 'Url Shortener',
+    component: () => import('@/pages/auth/functions/UrlShortener.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Url Shortener',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Url Shortener page accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Url Shortener - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Url Shortener page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: true,
+      requiresAuthOverlay: true,
+      inProgress: false,
+    },
+  },
+
   // -------------------------------- SYSTEM --------------------------------
 
   {
@@ -445,6 +475,11 @@ const routes = [
       requiresAuthOverlay: false,
       inProgress: false,
     },
+  },
+  {
+    path: '/r/view/:id',
+    name: 'View Redirect',
+    component: RedirectHandler,
   },
   {
     path: '/r/:id',

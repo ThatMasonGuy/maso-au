@@ -2,7 +2,7 @@
 <template>
     <div v-if="!open" class="h-60 w-72 bg-gray-800 text-gray-200 rounded-lg shadow-lg p-6 relative">
         <h1 class="text-3xl font-bold mb-6">URL Shortener</h1>
-        <Button class="absolute bottom-6 left-6 text-md" @click="$emit('open', componentId)">Open</Button>
+        <Button class="absolute bottom-6 left-6 text-md" @click="$router.push('/auth/functions/url-shortener')">Open</Button>
     </div>
     <div v-else class="h-full w-[95vw] sm:w-[97vw] md:w-[36rem] lg:w-[54rem] bg-gray-800 text-gray-200 rounded-lg shadow-lg p-6">
         <h1 class="text-3xl font-bold mb-6">URL Shortener</h1>
@@ -29,6 +29,7 @@ import { toast } from 'vue-sonner';
 import { getDoc, setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { useStore } from 'vuex';
 import { firestore } from '@/firebase';
+import router from '@/router';
 
 const store = useStore();
 const url = ref('');

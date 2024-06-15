@@ -28,6 +28,7 @@
     "moment": "^2.30.1",
     "primeicons": "^7.0.0",
     "primevue": "^3.52.0",
+    "qrious": "^4.0.2",
     "radix-vue": "^1.7.3",
     "sitemap": "^8.0.0",
     "tailwind-merge": "^2.3.0",
