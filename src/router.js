@@ -447,6 +447,33 @@ const routes = [
       inProgress: false,
     },
   },
+  {
+    path: '/auth/functions/invoice-generator',
+    alias: '/auth/functions/invoice-generator',
+    name: 'Invoice Generator',
+    component: () => import('@/pages/auth/functions/InvoiceGenerator.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Invoice Generator',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Invoice Generator page accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Invoice Generator - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Invoice Generator page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: true,
+      requiresAuthOverlay: true,
+      inProgress: false,
+    },
+  },
 
   // -------------------------------- SYSTEM --------------------------------
 

@@ -103,7 +103,6 @@ const store = createStore({
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const homeDataLive = docSnap.data();
-          console.log(homeDataLive);
           commit('SET_HOME_DATA', homeDataLive);
         } else {
           console.log('No home document found in Firestore!');

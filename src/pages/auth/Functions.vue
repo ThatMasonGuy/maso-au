@@ -46,7 +46,7 @@ import UrlShorten from '@/components/authenticated/functions/UrlShorten.vue'
 import CoinFlip from '@/components/authenticated/functions/CoinFlip.vue'
 import DiceRoll from '@/components/authenticated/functions/DiceRoll.vue'
 import TicTacToe from '@/components/authenticated/functions/TicTacToe.vue'
-import Calculator from '@/components/authenticated/functions/Calculator.vue'
+import InvoiceGenerator from '@/components/authenticated/functions/InvoiceGenerator.vue'
 import CodeSnippet from '@/components/authenticated/functions/CodeSnippet.vue'
 import CurrencyConvertor from '@/components/authenticated/functions/CurrencyConvertor.vue'
 import EventCountdown from '@/components/authenticated/functions/EventCountdown.vue'
@@ -69,7 +69,7 @@ const components = [
     { id: 2, name: CoinFlip, active: true, complete: true },
     { id: 3, name: DiceRoll, active: true, complete: true },
     { id: 4, name: TicTacToe, active: true, complete: true },
-    { id: 5, name: Calculator, active: true, complete: false },
+    { id: 5, name: InvoiceGenerator, active: true, complete: true },
     { id: 6, name: CodeSnippet, active: true, complete: false },
     { id: 7, name: CurrencyConvertor, active: true, complete: false },
     { id: 8, name: EventCountdown, active: true, complete: false },

@@ -1,9 +1,20 @@
 <!-- @/pages/auth/functions/UrlShortener.vue -->
 <template>
-    <div class="flex flex-col items-center p-6 bg-gray-900 pt-[--header-height] min-h-[--adjusted-height] text-white">
-        <h1 class="text-4xl font-bold text-blue-400 mt-4 mb-6">Short URL</h1>
-        <div class="flex flex-col lg:flex-row items-start w-full max-w-5xl space-y-6 lg:space-y-0 lg:space-x-6">
-            <div class="bg-gray-800 shadow-lg rounded-lg p-8 w-full lg:w-2/3">
+    <div
+        class="flex flex-col items-center p-6 bg-gray-900 pt-[--header-height] min-h-[--adjusted-height] text-white relative overflow-hidden">
+        <!-- Moving Blobs Background
+        <div class="absolute inset-0 w-screen h-screen object-cover">
+            <img class="blob animate-blob-1"
+                src="https://blobcdn.com/blob.svg?seed=5&extraPoints=5&fill=d414f7" />
+            <img class="blob animate-blob-2"
+                src="https://blobcdn.com/blob.svg?seed=7&extraPoints=7&fill=4fcc0a" />
+            <img class="blob animate-blob-3"
+                src="https://blobcdn.com/blob.svg?seed=3&extraPoints=4&fill=5fdce0" />
+        </div> -->
+        <h1 class="text-4xl font-bold text-blue-400 mt-4 mb-6 animate-fade-in relative z-10">URL Shortener</h1>
+        <div
+            class="flex flex-col lg:flex-row items-start w-full max-w-5xl space-y-6 lg:space-y-0 lg:space-x-6 animate-slide-in relative z-10">
+            <div class="bg-gray-400/30 backdrop-blur-md shadow-lg rounded-lg p-8 w-full lg:w-2/3">
                 <h2 class="text-2xl font-bold mb-4">Paste the URL to be shortened</h2>
                 <div class="flex space-x-4 mb-4">
                     <Input v-model="url" type="text" placeholder="Enter URL..."
@@ -15,17 +26,20 @@
                         <ArrowPathIcon v-if="isLoading" class="h-4 w-4 ml-2 animate-spin" />
                     </Button>
                 </div>
-                <p class="text-gray-400">ShortURL is a free tool to shorten URLs and generate short links. URL shortener
-                    allows to create a shortened link making it easy to share.</p>
-
-                <div v-if="newUrl" class="mt-4 bg-gray-700 p-4 rounded-lg flex items-center">
-                    <span class="flex-grow">{{ newUrl }}</span>
+                <p class="text-gray-400">URL Shortener is a free tool to shorten URLs and generate short links, making
+                    it easy to share.</p>
+                <div v-if="newUrl" class="my-4 flex space-x-4">
+                    <Input v-model="newUrl" type="text" readonly
+                        class="flex-grow p-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none select-all" />
                     <Button @click="copyToClipboard(newUrl)"
-                        class="ml-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Copy</Button>
+                        class="px-4 py-2 bg-blue-600 text-white text-md rounded-lg hover:bg-blue-700">
+                        Copy
+                        <ClipboardDocumentIcon class="h-4 w-4 ml-2" />
+                    </Button>
                 </div>
             </div>
-
-            <div class="bg-gray-800 shadow-lg rounded-lg p-8 w-full lg:w-1/3 flex flex-col items-center">
+            <div
+                class="bg-gray-400/30 backdrop-blur-md shadow-lg rounded-lg p-8 w-full lg:w-1/3 flex flex-col items-center animate-slide-in">
                 <h2 class="text-2xl font-bold mb-4">QR Code</h2>
                 <div
                     class="h-48 w-48 bg-gray-600 border border-gray-300 rounded-lg mb-4 flex items-center justify-center">
@@ -38,135 +52,61 @@
                         <ArrowPathIcon v-if="isSaving" class="h-4 w-4 ml-2 animate-spin" />
                         <CloudArrowDownIcon v-if="!isSaving" class="h-4 w-4 ml-2" />
                     </Button>
-                    <Dialog>
-                        <DialogTrigger :disabled="!newUrl">
-                            <Button :disabled="!newUrl"
-                                class="px-4 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">Edit</Button>
-                        </DialogTrigger>
-                        <DialogContent class="bg-gray-800 rounded-lg border-gray-300">
-                            <DialogHeader>
-                                <DialogTitle class="text-gray-200">Edit QR Code</DialogTitle>
-                                <DialogDescription class="text-gray-200">
-                                    Customize the QR code below. Click save when you're done.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div class="flex space-x-4">
-                                <div class="flex-1">
-                                    <div
-                                        class="h-64 w-64 bg-gray-600 border border-gray-300 rounded-lg mb-4 flex items-center justify-center">
-                                        <canvas ref="editQrCanvas" class="h-full w-full rounded-lg"></canvas>
-                                    </div>
-                                    <p class="text-yellow-500 text-sm"
-                                        v-if="foregroundColor !== '#000000' || backgroundColor !== '#FFFFFF'">
-                                        Warning: Changing colors may make the QR code harder to scan.
-                                    </p>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex flex-col space-y-4">
-                                        <div>
-                                            <label class="block text-gray-200">Background Color</label>
-                                            <div class="flex items-center space-x-2">
-                                                <input type="color" v-model="backgroundColor"
-                                                    class="mt-1 block w-1/2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none" />
-                                                <span class="text-gray-200">{{ backgroundColor }}</span>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="block text-gray-200">Foreground Color</label>
-                                            <div class="flex items-center space-x-2">
-                                                <input type="color" v-model="foregroundColor"
-                                                    class="mt-1 block w-1/2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none" />
-                                                <span class="text-gray-200">{{ foregroundColor }}</span>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="block text-gray-200">QR Code Style</label>
-                                            <select v-model="qrCodeStyle"
-                                                class="mt-1 block w-full rounded-md bg-gray-700 border border-gray-600 text-gray-200 focus:outline-none">
-                                                <option value="square">Square</option>
-                                                <option value="rounded">Rounded</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block text-gray-200">Scan Me Box</label>
-                                            <select v-model="scanMeBox"
-                                                class="mt-1 block w-full rounded-md bg-gray-700 border border-gray-600 text-gray-200 focus:outline-none">
-                                                <option value="none">None</option>
-                                                <option value="below">Below QR Code</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <DialogFooter>
-                                <Button @click="styleQRCode"
-                                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save
-                                    changes</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger class="cursor-not-allowed">
+                                <Button :disabled="true"
+                                    class="px-4 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 cursor-not-allowed">Edit</Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <div class="text-sm">Coming Soon!</div>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 </div>
             </div>
         </div>
-
-        <div class="w-full max-w-5xl mt-6">
-            <h2 class="text-2xl font-bold mb-4">Simple and fast URL shortener!</h2>
+        <div class="w-full max-w-5xl mt-6 animate-fade-in relative z-10">
+            <h2 class="text-2xl font-bold mb-4">Effortless URL Management</h2>
             <p class="text-gray-400 mb-4">
-                ShortURL allows to shorten long links from
-                <a href="#" class="text-blue-400">Instagram</a>,
-                <a href="#" class="text-blue-400">Facebook</a>,
-                <a href="#" class="text-blue-400">YouTube</a>,
-                <a href="#" class="text-blue-400">Twitter</a>,
-                <a href="#" class="text-blue-400">LinkedIn</a>,
-                <a href="#" class="text-blue-400">WhatsApp</a>,
-                <a href="#" class="text-blue-400">TikTok</a>, blogs and sites. Just paste the long URL and click the
-                Shorten URL button. On the next page, copy the shortened URL and share it on sites, chat and emails.
-                After shortening the URL, check
-                <a href="#" class="text-blue-400">how many clicks it received</a>.
+                Transform lengthy URLs into concise, shareable links with our user-friendly URL Shortener. Whether it's
+                for social media, emails, or text messages, make your links more manageable.
             </p>
-
-            <h2 class="text-2xl font-bold mb-4">Shorten, share and track</h2>
+            <h2 class="text-2xl font-bold mb-4">Track Your Links</h2>
             <p class="text-gray-400 mb-4">
-                Your shortened URLs can be used in publications, documents, advertisements, blogs, forums, instant
-                messages, and other locations. Track statistics for your business and projects by monitoring the number
-                of hits from your URL with our click counter.
+                Monitor the performance of your links with our advanced analytics. See how many clicks your shortened
+                URLs receive and gain insights into your audience's engagement.
             </p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="flex flex-col items-center bg-gray-800 shadow-lg rounded-lg p-6">
-                    <span class="text-2xl mb-2">👍</span>
-                    <h3 class="text-lg font-bold mb-2">Easy</h3>
-                    <p class="text-gray-400 text-center">ShortURL is easy and fast, enter the long link to get your
-                        shortened link.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
+                <div
+                    class="bg-gray-400/30 backdrop-blur-md rounded-lg p-4 flex flex-col items-center transition-transform transform hover:scale-105">
+                    <span class="text-3xl mb-2">🚀</span>
+                    <h3 class="text-lg font-bold mb-2">Fast & Easy</h3>
+                    <p class="text-gray-400">Shorten your URLs quickly and effortlessly. No signup required.</p>
                 </div>
-                <div class="flex flex-col items-center bg-gray-800 shadow-lg rounded-lg p-6">
-                    <span class="text-2xl mb-2">🔗</span>
-                    <h3 class="text-lg font-bold mb-2">Shortened</h3>
-                    <p class="text-gray-400 text-center">Use any link, no matter what size, ShortURL always shortens.
-                    </p>
+                <div
+                    class="bg-gray-400/30 backdrop-blur-md rounded-lg p-4 flex flex-col items-center transition-transform transform hover:scale-105">
+                    <span class="text-3xl mb-2">🔗</span>
+                    <h3 class="text-lg font-bold mb-2">Versatile</h3>
+                    <p class="text-gray-400">Works with any URL, regardless of length or complexity.</p>
                 </div>
-                <div class="flex flex-col items-center bg-gray-800 shadow-lg rounded-lg p-6">
-                    <span class="text-2xl mb-2">🔒</span>
-                    <h3 class="text-lg font-bold mb-2">Secure</h3>
-                    <p class="text-gray-400 text-center">It is fast and secure, our service has HTTPS protocol and data
-                        encryption.</p>
+                <div
+                    class="bg-gray-400/30 backdrop-blur-md rounded-lg p-4 flex flex-col items-center transition-transform transform hover:scale-105">
+                    <span class="text-3xl mb-2">📊</span>
+                    <h3 class="text-lg font-bold mb-2">In-depth Analytics</h3>
+                    <p class="text-gray-400">Gain insights with our detailed click tracking and analytics.</p>
                 </div>
-                <div class="flex flex-col items-center bg-gray-800 shadow-lg rounded-lg p-6">
-                    <span class="text-2xl mb-2">📊</span>
-                    <h3 class="text-lg font-bold mb-2">Statistics</h3>
-                    <p class="text-gray-400 text-center">Check the number of clicks that your shortened URL received.
-                    </p>
-                </div>
-                <div class="flex flex-col items-center bg-gray-800 shadow-lg rounded-lg p-6">
-                    <span class="text-2xl mb-2">🔍</span>
+                <div
+                    class="bg-gray-400/30 backdrop-blur-md rounded-lg p-4 flex flex-col items-center transition-transform transform hover:scale-105">
+                    <span class="text-3xl mb-2">🔍</span>
                     <h3 class="text-lg font-bold mb-2">Reliable</h3>
-                    <p class="text-gray-400 text-center">All links that try to disseminate spam, viruses and malware are
-                        deleted.</p>
+                    <p class="text-gray-400">Our service ensures your links are always accessible and reliable.</p>
                 </div>
-                <div class="flex flex-col items-center bg-gray-800 shadow-lg rounded-lg p-6">
-                    <span class="text-2xl mb-2">📱</span>
-                    <h3 class="text-lg font-bold mb-2">Devices</h3>
-                    <p class="text-gray-400 text-center">Compatible with smartphones, tablets and desktop.</p>
+                <div
+                    class="bg-gray-400/30 backdrop-blur-md rounded-lg p-4 flex flex-col items-center transition-transform transform hover:scale-105">
+                    <span class="text-3xl mb-2">⚙️</span>
+                    <h3 class="text-lg font-bold mb-2">Customizable</h3>
+                    <p class="text-gray-400">Customize your links for better branding and recognition.</p>
                 </div>
             </div>
         </div>
@@ -174,23 +114,15 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, watch } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'vue-sonner';
 import { getDoc, setDoc, doc, Timestamp } from 'firebase/firestore';
 import { useStore } from 'vuex';
 import { firestore } from '@/firebase';
-import { ArrowPathIcon, CloudArrowDownIcon, PaperAirplaneIcon } from '@heroicons/vue/24/outline';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import { ArrowPathIcon, CloudArrowDownIcon, PaperAirplaneIcon, ClipboardDocumentIcon } from '@heroicons/vue/24/outline';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import QRious from 'qrious';
 
 const store = useStore();
@@ -200,11 +132,6 @@ const shortenedUrls = ref([]);
 const isSaving = ref(false);
 const isLoading = ref(false);
 const qrCanvas = ref(null);
-const editQrCanvas = ref(null);
-// const frames = ref(['frame1.png', 'frame2.png', 'frame3.png']);
-// const selectedFrame = ref(0);
-const shapes = ref(['0%', '10%', '50%']);
-const selectedShape = ref(0);
 const backgroundColor = ref('#FFFFFF');
 const foregroundColor = ref('#000000');
 const user = computed(() => store.getters.user);
@@ -219,7 +146,7 @@ const generateUniqueId = () => {
     return id;
 };
 
-const checkDuplicateAndGenerateId = async (firestore) => {
+const checkDuplicateAndGenerateId = async () => {
     let id;
     let docSnap;
 
@@ -238,17 +165,17 @@ const timeout = (ms) => {
 
 const shortenUrl = async () => {
     isLoading.value = true;
+    console.log('Shorten URL button clicked');
     if (!user.value) {
         toast.error('You need to be logged in to shorten URLs');
         isLoading.value = false;
         return;
     }
 
-    const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?(\?[^\s]*)?$/;
+    const urlRegex = /^[^\s]+\.[^\s]+$/;
 
     if (!urlRegex.test(url.value)) {
         console.log('URL validation failed for:', url.value);
-        console.log('Validation failed because the URL does not match the expected format.');
         toast.error('Please enter a valid URL');
         isLoading.value = false;
         return;
@@ -266,13 +193,14 @@ const shortenUrl = async () => {
                 created: Timestamp.now(),
                 updated: Timestamp.now(),
                 viewCount: 0,
-                viewTimestamps: [Timestamp.now()],
+                viewTimestamps: [],
             }),
             timeout(5000)
         ]);
 
         newUrl.value = shortenedUrl;
         shortenedUrls.value.push({ original: url.value, shortened: shortenedUrl });
+        console.log('URL successfully shortened:', shortenedUrl);
         url.value = '';
 
         nextTick(() => {
@@ -319,40 +247,90 @@ const downloadQRCode = () => {
     link.click();
     isSaving.value = false;
 };
-
-const styleQRCode = () => {
-  const qr = new QRious({
-    value: newUrl.value, 
-    size: 240,
-    background: backgroundColor.value,
-    foreground: foregroundColor.value,
-    level: 'H',
-  });
-
-  const sizeWithBorder = qr.size + padding.value * 2;
-  qrCanvas.value.width = sizeWithBorder; 
-  qrCanvas.value.height = sizeWithBorder;
-
-  const context = qrCanvas.value.getContext('2d');
-  context.fillStyle = backgroundColor.value;
-  context.fillRect(0, 0, sizeWithBorder, sizeWithBorder);
-  context.drawImage(qr.canvas, padding.value, padding.value);
-
-  editQrCanvas.value.width = sizeWithBorder; 
-  editQrCanvas.value.height = sizeWithBorder;
-
-  const editContext = editQrCanvas.value.getContext('2d');
-  editContext.fillStyle = backgroundColor.value;
-  editContext.fillRect(0, 0, sizeWithBorder, sizeWithBorder);
-  editContext.drawImage(qr.canvas, padding.value, padding.value);
-};
-
-watch(
-  [newUrl, backgroundColor, foregroundColor], 
-  () => {
-    if (qrCanvas.value && editQrCanvas.value) {
-      styleQRCode();
-    }
-  }
-);
 </script>
+
+<style scoped>
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 1s ease-in-out;
+}
+
+.animate-slide-in {
+    animation: slide-in 1s ease-in-out;
+}
+
+.blob {
+    opacity: 0.3;
+    mix-blend-mode: multiply;
+    filter: blur(50px);
+}
+
+@keyframes blob1 {
+
+    0%,
+    100% {
+        transform: translate3d(-20%, -20%, 0);
+    }
+
+    50% {
+        transform: translate3d(20%, 20%, 0);
+    }
+}
+
+@keyframes blob2 {
+
+    0%,
+    100% {
+        transform: translate3d(20%, -20%, 0);
+    }
+
+    50% {
+        transform: translate3d(-20%, 20%, 0);
+    }
+}
+
+@keyframes blob3 {
+
+    0%,
+    100% {
+        transform: translate3d(-20%, 20%, 0);
+    }
+
+    50% {
+        transform: translate3d(20%, -20%, 0);
+    }
+}
+
+.animate-blob-1 {
+    animation: blob1 25s infinite;
+}
+
+.animate-blob-2 {
+    animation: blob2 20s infinite;
+}
+
+.animate-blob-3 {
+    animation: blob3 30s infinite;
+}
+</style>

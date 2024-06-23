@@ -42,7 +42,7 @@
                 class="mr-4 px-1 lg:px-2">Websites</Button>
             </router-link>
           </li>
-          <li class="sm:mx-1 my-2 sm:my-0">
+          <li class="sm:mx-1 my-2 sm:my-0 cursor-pointer">
             <a @click="handleAvatarClick">
               <Avatar class="h-10 w-10 mr-2">
                 <AvatarFallback>

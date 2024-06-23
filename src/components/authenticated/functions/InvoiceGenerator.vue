@@ -4,7 +4,7 @@
         <h1 class="text-3xl font-bold mb-6">{{ details.title }}</h1>
         <Popover ref="popover">
             <PopoverTrigger>
-                <Button class="absolute bottom-5 left-5 text-md">Open</Button>
+                <Button class="absolute bottom-5 left-5 text-md" @click="$router.push('/auth/functions/invoice-generator')">Open</Button>
             </PopoverTrigger>
             <PopoverContent class="bg-gray-800 text-gray-200 rounded-lg shadow-2xl p-6 w-[400px] h-full">
                 <h1 class="text-3xl font-bold mb-6">{{ details.title }}</h1>
@@ -21,23 +21,22 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import { useRoute } from 'vue-router';
 import { Button } from '@/components/ui/button';
 import { toast } from 'vue-sonner';
 import { getDoc, setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { firestore } from '@/firebase';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import router from '@/router';
 
 const store = useStore();
-const route = useRoute();
 const popover = ref(null);
 
 const user = computed(() => store.getters.user);
 
 const details = {
-    title: 'Calculator',
-    description: 'A simple calculator app',
-    hashCode: 'calculator',
+    title: 'Invoice Generator',
+    description: 'A simple invoice generator',
+    hashCode: 'invoice-generator',
 };
 
 onMounted(() => {
