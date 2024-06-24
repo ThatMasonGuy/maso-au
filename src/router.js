@@ -474,6 +474,36 @@ const routes = [
       inProgress: false,
     },
   },
+  
+  // -------------------------------- LEARNING MANAGEMENT SYSTEM --------------------------------
+
+  {
+    path: '/auth/learning/home',
+    alias: [ '/auth/learning/', '/auth/learning/home/', '/auth/learning' ],
+    name: 'Learning Management System',
+    component: () => import('@/pages/auth/learning/Home.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Learning Management System',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Learning Management System - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
 
   // -------------------------------- SYSTEM --------------------------------
 

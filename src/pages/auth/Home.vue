@@ -26,9 +26,9 @@
           <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Go to Settings</button>
         </div>
         <div class="bg-white rounded-lg shadow-lg p-6">
-          <h2 class="text-2xl font-semibold mb-4">Support</h2>
-          <p class="text-[var(--text-700)]">Need help? Access our support resources and contact us.</p>
-          <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Get Support</button>
+          <h2 class="text-2xl font-semibold mb-4">Learning Management System</h2>
+          <p class="text-[var(--text-700)]">Head to the currently in development learning management system by Tempest Studios.</p>
+          <button @click="$router.push('/auth/learning/')" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Check it out</button>
         </div>
         <div class="bg-white rounded-lg shadow-lg p-6">
           <h2 class="text-2xl font-semibold mb-4">Dashboard</h2>
