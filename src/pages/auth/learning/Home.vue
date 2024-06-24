@@ -76,10 +76,10 @@
               class="p-4 border border-gray-100 rounded-md hover:shadow-xl transition-all duration-300 relative group"
               :class="[
             { 'border-yellow-500': course.highlightSession && !course.userScheduled },
-            { 'border-blue-500': course.userScheduled },
-            { 'bg-gray-300': course.paused },
-            { 'bg-gray-300 cursor-not-allowed hover:shadow-none': course.sessionFull },
-            { 'bg-yellow-100': course.almostFull && !course.sessionFull },
+            { 'border-green-500': course.userScheduled },
+            { 'border-gray-800': course.paused },
+            { 'border-red-500 cursor-not-allowed hover:shadow-none': course.sessionFull },
+            { 'border-yellow-500': course.almostFull && !course.sessionFull && !course.userScheduled },
           ]">
               <div class="grid grid-cols-2 gap-2">
                 <div class="font-semibold">{{ course.name }}</div>
@@ -87,6 +87,24 @@
                 <div>{{ formattedDates(course) }}</div>
                 <div class="text-right">{{ course.currentBookings }}/{{ course.maxAttendees }}</div>
                 <div class="col-span-2 truncate">{{ course.description }}</div>
+              </div>
+              <div class="absolute -top-3 -left-3 flex space-x-1">
+                <svg v-if="course.sessionFull" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                  <circle cx="12" cy="12" r="10" fill="red"></circle>
+                  <text x="12" y="16" font-size="16" fill="white" text-anchor="middle" alignment-baseline="middle">i</text>
+                </svg>
+                <svg v-if="course.almostFull && !course.sessionFull" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                  <circle cx="12" cy="12" r="10" fill="orange"></circle>
+                  <text x="12" y="16" font-size="16" fill="white" text-anchor="middle" alignment-baseline="middle">i</text>
+                </svg>
+                <svg v-if="course.userScheduled" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                  <circle cx="12" cy="12" r="10" fill="green"></circle>
+                  <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg v-if="course.highlightSession" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                  <circle cx="12" cy="12" r="10" fill="purple"></circle>
+                  <text x="12" y="16" font-size="16" fill="white" text-anchor="middle" alignment-baseline="middle">!</text>
+                </svg>
               </div>
               <button @click="toggleWishlist(course)"
                 class="absolute rounded-full p-2 bg-white shadow-md -top-3 -right-3 transition-all duration-300" :class="[
