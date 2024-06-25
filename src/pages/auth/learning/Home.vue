@@ -50,7 +50,7 @@
       <div class="relative mb-6">
         <h2 class="text-xl font-semibold text-gray-700 mb-2">Upcoming Courses</h2>
         <div class="flex items-center">
-          <div class="flex space-x-2 overflow-x-auto pb-2 flex-grow">
+          <div class="flex space-x-2 overflow-x-auto pb-2 flex-grow backdrop-blur-sm">
             <transition-group name="fade" tag="div" class="flex space-x-2">
               <Button v-for="session in filteredSessions" :key="session.id"
                 class="px-4 py-2 bg-blue-500 text-white rounded-md whitespace-nowrap hover:bg-blue-600 transition-colors duration-300">
@@ -69,15 +69,15 @@
         </div>
       </div>
 
-      <div class="flex-1 bg-white rounded-lg shadow-md p-4">
-        <TransitionGroup name="list" tag="ul" class="space-y-4">
+      <div class="relative flex-1 bg-white rounded-lg shadow-md p-4 backdrop-blur-sm">
+        <TransitionGroup name="list" tag="ul" class="space-y-4 relative z-10">
           <template v-if="paginatedCourses.length">
             <li v-for="course in paginatedAndSortedCourses" :key="course.id"
-              class="p-4 border border-gray-100 rounded-md hover:shadow-xl transition-all duration-300 relative group"
+              class="p-4 border border-gray-100 rounded-md hover:shadow-xl transition-all duration-300 relative group backdrop-blur-sm"
               :class="[
             { 'border-yellow-500': course.highlightSession && !course.userScheduled },
             { 'border-green-500': course.userScheduled },
-            { 'border-gray-800': course.paused },
+            { 'border-gray-800 bg-gray-200 cursor-not-allowed hover:shadow-none': course.paused },
             { 'border-red-500 cursor-not-allowed hover:shadow-none': course.sessionFull },
             { 'border-yellow-500': course.almostFull && !course.sessionFull && !course.userScheduled },
           ]">
@@ -89,22 +89,92 @@
                 <div class="col-span-2 truncate">{{ course.description }}</div>
               </div>
               <div class="absolute -top-3 -left-3 flex space-x-1">
-                <svg v-if="course.sessionFull" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                  <circle cx="12" cy="12" r="10" fill="red"></circle>
-                  <text x="12" y="16" font-size="16" fill="white" text-anchor="middle" alignment-baseline="middle">i</text>
-                </svg>
-                <svg v-if="course.almostFull && !course.sessionFull" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                  <circle cx="12" cy="12" r="10" fill="orange"></circle>
-                  <text x="12" y="16" font-size="16" fill="white" text-anchor="middle" alignment-baseline="middle">i</text>
-                </svg>
-                <svg v-if="course.userScheduled" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                  <circle cx="12" cy="12" r="10" fill="green"></circle>
-                  <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <svg v-if="course.highlightSession" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                  <circle cx="12" cy="12" r="10" fill="purple"></circle>
-                  <text x="12" y="16" font-size="16" fill="white" text-anchor="middle" alignment-baseline="middle">!</text>
-                </svg>
+                <TooltipProvider>
+                  <Tooltip v-if="course.highlightSession">
+                    <TooltipTrigger>
+                      <svg fill="none" height="30" viewBox="0 0 32 32" width="30" xmlns="http://www.w3.org/2000/svg"
+                        id="fi_6142849">
+                        <linearGradient id="paint0_linear_364_995" gradientUnits="userSpaceOnUse" x1="27.097" x2="1.308"
+                          y1="29.141" y2="9.187">
+                          <stop offset="0" stop-color="#ffb800" />
+                          <stop offset="1" stop-color="#fff281" />
+                        </linearGradient>
+                        <path clip-rule="evenodd"
+                          d="m17.5943 4.87146c-.0725-.71631-1.1162-.71631-1.1887 0-.0286.28234-.2519.50561-.5342.5342-.7163.07251-.7163 1.11621 0 1.18872.2823.02858.5056.25185.5342.53419.0725.71631 1.1162.71631 1.1887 0 .0286-.28234.2519-.50561.5342-.53419.7163-.07251.7163-1.11621 0-1.18872-.2823-.02859-.5056-.25186-.5342-.5342zm4.9429 2.55795c.2731-.97294 1.6524-.97294 1.9255 0l.7487 2.66669c.0942.3358.3567.5982.6925.6925l2.6666.7486c.973.2732.973 1.6524 0 1.9256l-2.6666.7486c-.3358.0943-.5983.3567-.6925.6925l-.7487 2.6667c-.2731.973-1.6524.973-1.9255 0l-.7487-2.6667c-.0943-.3358-.3567-.5982-.6925-.6925l-2.6667-.7486c-.9729-.2732-.9729-1.6524 0-1.9256l2.6667-.7486c.3358-.0943.5982-.3567.6925-.6925zm-12.36 4.60629c.7087-1.569 2.9368-1.569 3.6455 0l1.5998 3.5423c.2004.4437.5558.7991.9995.9995l3.5422 1.5998c1.5691.7086 1.5691 2.9368 0 3.6454l-3.5422 1.5999c-.4437.2004-.7991.5558-.9995.9995l-1.5998 3.5422c-.7087 1.569-2.9368 1.569-3.6455 0l-1.59981-3.5422c-.2004-.4437-.55578-.7991-.99949-.9995l-3.54224-1.5999c-1.56903-.7086-1.56903-2.9368 0-3.6454l3.54224-1.5998c.44371-.2004.79909-.5558.99949-.9995z"
+                          fill="url(#paint0_linear_364_995)" fill-rule="evenodd" />
+                      </svg>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Session is highlighted</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip v-if="course.sessionFull">
+                    <TooltipTrigger>
+                      <svg height="30" viewBox="0 0 512 512" width="30" xmlns="http://www.w3.org/2000/svg"
+                        id="fi_10308693">
+                        <circle cx="256" cy="256" fill="#ff2147" r="256" />
+                        <g fill="#fff">
+                          <path
+                            d="m256 307.2a35.89 35.89 0 0 1 -35.86-34.46l-4.73-119.44a35.89 35.89 0 0 1 35.86-37.3h9.46a35.89 35.89 0 0 1 35.86 37.3l-4.73 119.44a35.89 35.89 0 0 1 -35.86 34.46z" />
+                          <rect height="71.66" rx="35.83" width="71.66" x="220.17" y="324.34" />
+                        </g>
+                      </svg>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Session is full</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip v-if="course.almostFull && !course.sessionFull">
+                    <TooltipTrigger>
+                      <svg height="30" viewBox="0 0 512 512" width="30" xmlns="http://www.w3.org/2000/svg"
+                        id="fi_10308693">
+                        <circle cx="256" cy="256" fill="#FFBF00" r="256" />
+                        <g fill="#fff">
+                          <path
+                            d="m256 307.2a35.89 35.89 0 0 1 -35.86-34.46l-4.73-119.44a35.89 35.89 0 0 1 35.86-37.3h9.46a35.89 35.89 0 0 1 35.86 37.3l-4.73 119.44a35.89 35.89 0 0 1 -35.86 34.46z" />
+                          <rect height="71.66" rx="35.83" width="71.66" x="220.17" y="324.34" />
+                        </g>
+                      </svg>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Session is almost full.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip v-if="course.userScheduled">
+                    <TooltipTrigger>
+                      <svg version="1.1" id="fi_190411" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" height="30"
+                        width="30" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                        <circle style="fill:#32BA7C;" cx="256" cy="256" r="256"></circle>
+                        <path style="fill:#FFFFFF;" d="M260,310.4c11.2,11.2,11.2,30.4,0,41.6l-23.2,23.2c-11.2,11.2-30.4,11.2-41.6,0L93.6,272.8
+c-11.2-11.2-11.2-30.4,0-41.6l23.2-23.2c11.2-11.2,30.4-11.2,41.6,0L260,310.4z"></path>
+                        <path style="fill:#FFFFFF;" d="M348.8,133.6c11.2-11.2,30.4-11.2,41.6,0l23.2,23.2c11.2,11.2,11.2,30.4,0,41.6l-176,175.2
+c-11.2,11.2-30.4,11.2-41.6,0l-23.2-23.2c-11.2-11.2-11.2-30.4,0-41.6L348.8,133.6z"></path>
+                      </svg>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>You are booked into this session.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip v-if="course.paused">
+                    <TooltipTrigger>
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="fi_15525354">
+                        <g id="Layer_2" data-name="Layer 2">
+                          <g id="Layer_1-2" data-name="Layer 1">
+                            <circle cx="12.01" cy="12" fill="#cf1f25" r="11"></circle>
+                            <path
+                              d="m12.06 4.74a7.2 7.2 0 1 0 7.2 7.2 7.21 7.21 0 0 0 -7.2-7.2zm0 13.07a5.84 5.84 0 0 1 -3.44-1.12l8.12-8.29a5.86 5.86 0 0 1 -4.68 9.41zm0-11.74a5.84 5.84 0 0 1 3.61 1.24l-8.16 8.33a5.86 5.86 0 0 1 4.55-9.57z"
+                              fill="#fff"></path>
+                            <path d="m0 0h24v24h-24z" fill="none"></path>
+                          </g>
+                        </g>
+                      </svg>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>This course is currently unavailable.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
               <button @click="toggleWishlist(course)"
                 class="absolute rounded-full p-2 bg-white shadow-md -top-3 -right-3 transition-all duration-300" :class="[
@@ -167,6 +237,12 @@ import {
   PaginationNext,
   PaginationPrev,
 } from '@/components/ui/pagination'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip'
 
 const df = new DateFormatter('en-AU', {
   dateStyle: 'medium',
@@ -240,7 +316,7 @@ const coursesData = ref([
     userScheduled: false,
     highlightSession: false,
     courseType: ['backend'],
-    paused: false,
+    paused: true,
   },
   {
     id: 4,

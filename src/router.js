@@ -504,6 +504,33 @@ const routes = [
       inProgress: false,
     },
   },
+  {
+    path: '/auth/learning/admin/addcourse',
+    alias: [ '/auth/learning/admin/addcourse/', '/auth/learning/admin/add-course', '/auth/learning/admin/add-course/' ],
+    name: 'LMS Admin - Add Course',
+    component: () => import('@/pages/auth/learning/admin/AddCourse.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Learning Management System',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Learning Management System - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
 
   // -------------------------------- SYSTEM --------------------------------
 

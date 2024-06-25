@@ -18,36 +18,36 @@
             <nav class="flex-1 justify-start items-start">
                 <ul class="space-y-2">
                     <li>
-                        <a href="#"
-                            class="text-white flex p-2 rounded-md hover:bg-gray-700 hover:shadow-lg transition-all duration-200">
+                        <button @click.prevent="$router.push('/auth/learning')"
+                            class="w-full text-white flex p-2 rounded-md hover:bg-gray-700 hover:shadow-lg transition-all duration-200">
                             <HomeIcon class="h-6 w-6" />
                             <span v-show="sidebarOpen" class="ml-4 transition-opacity duration-500"
                             :class="{ 'opacity-0': !sidebarOpen, 'opacity-100': sidebarOpen }">Dashboard</span>
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a href="#"
-                            class="text-white flex p-2 rounded-md hover:bg-gray-700 hover:shadow-lg transition-all duration-200">
+                        <button @click.prevent="$router.push('/auth/learning/admin/addcourse')"
+                            class="w-full text-white flex p-2 rounded-md hover:bg-gray-700 hover:shadow-lg transition-all duration-200">
                             <BookOpenIcon class="h-6 w-6" />
                             <span v-show="sidebarOpen" class="ml-4 transition-opacity duration-500"
                             :class="{ 'opacity-0': !sidebarOpen, 'opacity-100': sidebarOpen }">Catalogue</span>
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a href="#"
-                            class="text-white flex p-2 rounded-md hover:bg-gray-700 hover:shadow-lg transition-all duration-200">
+                        <button @click.prevent="$router.push('/auth/learning')"
+                            class="w-full text-white flex p-2 rounded-md hover:bg-gray-700 hover:shadow-lg transition-all duration-200">
                             <UserIcon class="h-6 w-6" />
                             <span v-show="sidebarOpen" class="ml-4 transition-opacity duration-500"
                             :class="{ 'opacity-0': !sidebarOpen, 'opacity-100': sidebarOpen }">Account</span>
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a href="#"
-                            class="text-white flex p-2 rounded-md hover:bg-gray-700 hover:shadow-lg transition-all duration-200">
+                        <button @click.prevent="$router.push('/auth/learning')"
+                            class="w-full text-white flex p-2 rounded-md hover:bg-gray-700 hover:shadow-lg transition-all duration-200">
                             <CogIcon class="h-6 w-6" />
                             <span v-show="sidebarOpen" class="ml-4 transition-opacity duration-500"
                             :class="{ 'opacity-0': !sidebarOpen, 'opacity-100': sidebarOpen }">Settings</span>
-                        </a>
+                        </button>
                     </li>
                 </ul>
             </nav>
