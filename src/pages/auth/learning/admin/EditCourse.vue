@@ -3,20 +3,23 @@
         <AdminSidebar class="shadow-2xl" />
         <div class="flex flex-col flex-1 px-4 py-6">
             <div class="flex items-center justify-between mb-6">
-                <h1 class="text-3xl font-semibold text-gray-700">Learning Management System</h1>
+                <h1 class="text-3xl font-semibold text-gray-700">Edit Course</h1>
+                <Button @click="navigateToSessions" class="bg-green-600 hover:bg-green-700 text-white">
+                    Edit Sessions
+                </Button>
             </div>
 
-            <div class="relative flex-1 bg-white rounded-lg shadow-md p-4 backdrop-blur-sm mx-auto max-w-5xl">
-                <h2 class="text-xl font-semibold text-gray-700 mb-4">Add New Course</h2>
-                <form @submit.prevent="addCourse" class="space-y-4">
+            <div v-if="course"
+                class="relative flex-1 bg-white rounded-lg shadow-md p-4 backdrop-blur-sm mx-auto max-w-5xl">
+                <form @submit.prevent="updateCourse" class="space-y-4">
                     <div class="flex space-x-4">
                         <div class="w-1/3">
                             <label class="block text-sm font-medium">Course Image</label>
                             <div :class="[
                     'mt-1 flex justify-center items-center border-2 border-gray-300 border-dashed rounded-md cursor-pointer overflow-hidden relative',
-                    { 'border-none': imagePreview }
+                    { 'border-none': imagePreview || course.image }
                 ]" @dragover.prevent @drop.prevent="handleDrop" @click="triggerFileInput">
-                                <div v-if="!imagePreview" class="space-y-1 text-center mx-6 mt-5 mb-6">
+                                <div v-if="!imagePreview && !course.image" class="space-y-1 text-center mx-6 mt-5 mb-6">
                                     <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none"
                                         viewBox="0 0 48 48" aria-hidden="true">
                                         <path
@@ -34,7 +37,7 @@
                                     </div>
                                 </div>
                                 <div v-else class="relative w-full h-full">
-                                    <img :src="imagePreview" alt="Course image preview"
+                                    <img :src="imagePreview || course.image" alt="Course image preview"
                                         class="w-full h-full object-cover rounded-md" />
                                     <div class="absolute top-0 right-0 bg-black text-white w-6 h-6 rounded-full flex items-center justify-center cursor-pointer"
                                         @click.stop="removeImage" @mouseover="isRemoveHover = true"
@@ -109,13 +112,14 @@
                                     @input="validateLength" @blur="showLengthError = true" />
                                 <Select v-model="length.unit">
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Filter by course type" class="text-gray-500">{{
-                    length.unit.charAt(0).toUpperCase() + length.unit.slice(1) }}
+                                        <SelectValue placeholder="Filter by course type" class="text-gray-500">
+                                            {{ length.unit.charAt(0).toUpperCase() + length.unit.slice(1) }}
                                         </SelectValue>
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem v-for="option in availableUnits" :key="option.value"
-                                            :value="option.value">{{ option.label }}
+                                            :value="option.value">
+                                            {{ option.label }}
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -125,10 +129,13 @@
                     <div class="flex justify-end">
                         <Button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                             :disabled="!isFormValid">
-                            Add Course
+                            Update Course
                         </Button>
                     </div>
                 </form>
+            </div>
+            <div v-else class="text-center mt-8">
+                <p class="text-xl font-semibold">Loading course data...</p>
             </div>
         </div>
     </div>
@@ -136,7 +143,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { collection, setDoc, doc, getDocs, query, where } from 'firebase/firestore';
+import { useRoute, useRouter } from 'vue-router';
+import { collection, getDoc, updateDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { firestore, storage } from '@/firebase';
 import { Label } from '@/components/ui/label';
@@ -152,6 +160,11 @@ import { onClickOutside } from '@vueuse/core';
 import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
+const route = useRoute();
+const router = useRouter();
+const courseId = route.params.id;
+
+const course = ref(null);
 const title = ref('');
 const description = ref('');
 const imageFile = ref(null);
@@ -165,9 +178,28 @@ const isTitleValid = ref(true);
 const isTitleTaken = ref(false);
 const showTitleError = ref(false);
 const showLengthError = ref(false);
+const isRemoveHover = ref(false);
 
 const coursesCollection = collection(firestore, 'learningManagementSystem/tempestStudios/courses');
 const categories = ref([]);
+
+const fetchCourse = async () => {
+    const docRef = doc(coursesCollection, courseId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        course.value = { id: docSnap.id, ...docSnap.data() };
+        title.value = course.value.title;
+        description.value = course.value.description;
+        modelValue.value = course.value.courseCategory;
+        length.value = course.value.length;
+        imagePreview.value = course.value.image;
+    } else {
+        console.log("No such document!");
+        toast.error("Course not found");
+        router.push('/admin/courses'); // Redirect to courses list
+    }
+};
 
 const fetchCategories = async () => {
     const snapshot = await getDocs(coursesCollection);
@@ -181,7 +213,10 @@ const fetchCategories = async () => {
     categories.value = Array.from(new Set(allCategories));
 };
 
-onMounted(fetchCategories);
+onMounted(() => {
+    fetchCourse();
+    fetchCategories();
+});
 
 const filteredCategories = computed(() => {
     return categories.value.filter(category => !modelValue.value.includes(category));
@@ -204,14 +239,6 @@ onClickOutside(() => {
     open.value = false;
 });
 
-const toCamelCase = (str) => {
-    return str
-        .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) => {
-            if (+match === 0) return '';
-            return index === 0 ? match.toLowerCase() : match.toUpperCase();
-        });
-};
-
 const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -220,16 +247,14 @@ const validateTitle = async () => {
     const titleRegex = /^(?!.*\s$)(?!\s)[a-zA-Z0-9- ]{4,}$/;
     isTitleValid.value = titleRegex.test(title.value);
 
-    if (isTitleValid.value) {
+    if (isTitleValid.value && title.value !== course.value.title) {
         const q = query(coursesCollection, where('title', '==', title.value));
         const querySnapshot = await getDocs(q);
         isTitleTaken.value = !querySnapshot.empty;
+    } else {
+        isTitleTaken.value = false;
     }
 };
-
-const courseId = computed(() => {
-    return toCamelCase(title.value);
-});
 
 const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -284,23 +309,22 @@ const isFormValid = computed(() => {
         isTitleValid.value &&
         !isTitleTaken.value &&
         description.value.trim() !== '' &&
-        imageFile.value !== null &&
         modelValue.value.length > 0 &&
         isLengthValid.value
     );
 });
 
-const addCourse = async () => {
+const updateCourse = async () => {
     if (!isFormValid.value) return;
 
-    let imageUrl = '';
+    let imageUrl = course.value.image;
     if (imageFile.value) {
-        const imageRef = storageRef(storage, `company-specific/tempest-studios/learning/courses/images/${courseId.value}`);
+        const imageRef = storageRef(storage, `company-specific/tempest-studios/learning/courses/images/${courseId}`);
         await uploadBytes(imageRef, imageFile.value);
         imageUrl = await getDownloadURL(imageRef);
     }
 
-    const courseData = {
+    const updatedCourseData = {
         title: title.value,
         description: description.value,
         image: imageUrl,
@@ -309,26 +333,24 @@ const addCourse = async () => {
             unit: length.value.unit
         },
         courseCategory: modelValue.value,
-        courseId: courseId.value
     };
 
     try {
-        await setDoc(doc(coursesCollection, courseId.value), courseData);
+        const courseRef = doc(coursesCollection, courseId);
+        await updateDoc(courseRef, updatedCourseData);
 
-        // Reset form fields
-        title.value = '';
-        description.value = '';
-        imageFile.value = null;
-        imagePreview.value = null;
-        modelValue.value = [];
-        length.value = { value: 1, unit: 'Days' };
-
-        toast.success('Course added successfully!');
+        toast.success('Course updated successfully!');
+        router.push('/admin/courses'); // Redirect to courses list after update
     } catch (error) {
-        console.error('Error adding document: ', error);
-        toast.error('Failed to add course. Please try again.');
+        console.error('Error updating document: ', error);
+        toast.error('Failed to update course. Please try again.');
     }
 };
+
+const navigateToSessions = () => {
+    router.push(`/admin/courses/${courseId}/sessions`);
+};
+
 </script>
 
 <style scoped>

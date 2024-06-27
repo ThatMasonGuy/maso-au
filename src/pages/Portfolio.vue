@@ -136,11 +136,11 @@
           class="text-blue-700 hover:text-blue-500 hover:underline text-sm sm:text-md md:text-lg whitespace-nowrap">Click
           here</a>
       </div>
-      <div class="text-center mt-8 font-bold text-gray-100 text-sm sm:text-md md:text-lg">
+      <!-- <div class="text-center mt-8 font-bold text-gray-100 text-sm sm:text-md md:text-lg">
         Want to generate a PDF of the resume? <button @click="generatePDF"
           class="text-blue-700 hover:text-blue-500 hover:underline text-sm sm:text-md md:text-lg whitespace-nowrap">Click
           here</button>
-      </div>
+      </div> -->
     </div>
     <div v-else class="text-center text-gray-100">Loading...</div>
   </div>

@@ -478,6 +478,33 @@ const routes = [
   // -------------------------------- LEARNING MANAGEMENT SYSTEM --------------------------------
 
   {
+    path: '/auth/learning/admin/dashboard',
+    alias: [ '/auth/learning/admin/dashboard/', '/auth/learning/admin', '/auth/learning/admin/' ],
+    name: 'LMS Admin - Dashboard',
+    component: () => import('@/pages/auth/learning/admin/Dashboard.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Learning Management System',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Learning Management System - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
     path: '/auth/learning/home',
     alias: [ '/auth/learning/', '/auth/learning/home/', '/auth/learning' ],
     name: 'Learning Management System',
@@ -509,6 +536,141 @@ const routes = [
     alias: [ '/auth/learning/admin/addcourse/', '/auth/learning/admin/add-course', '/auth/learning/admin/add-course/' ],
     name: 'LMS Admin - Add Course',
     component: () => import('@/pages/auth/learning/admin/AddCourse.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Learning Management System',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Learning Management System - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/learning/admin/courses/:id/edit',
+    alias: [ '/auth/learning/admin/courses/:id/edit/' ],
+    name: 'LMS Admin - Edit Course',
+    component: () => import('@/pages/auth/learning/admin/EditCourse.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Learning Management System',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Learning Management System - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/learning/admin/courses/:id/sessions',
+    alias: [ '/auth/learning/admin/courses/:id/sessions/' ],
+    name: 'LMS Admin - Sessions',
+    component: () => import('@/pages/auth/learning/admin/EditCourse.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Learning Management System',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Learning Management System - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/learning/admin/courses/:id/sessions/edit',
+    alias: [ '/auth/learning/admin/courses/:id/sessions/edit/' ],
+    name: 'LMS Admin - Edit Sessions',
+    component: () => import('@/pages/auth/learning/admin/EditCourse.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Learning Management System',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Learning Management System - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/learning/admin/courses',
+    alias: [ '/auth/learning/admin/courses/', '/auth/learning/admin/course', '/auth/learning/admin/course/' ],
+    name: 'LMS Admin - Courses and Sessions',
+    component: () => import('@/pages/auth/learning/admin/CoursesAndSessions.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Learning Management System',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Learning Management System - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/learning/admin/addsession',
+    alias: [ '/auth/learning/admin/addsession/', '/auth/learning/admin/add-session', '/auth/learning/admin/add-session/' ],
+    name: 'LMS Admin - Add Session',
+    component: () => import('@/pages/auth/learning/admin/AddSession.vue'),
     meta: {
       requiresAuth: true,
       title: 'Learning Management System',

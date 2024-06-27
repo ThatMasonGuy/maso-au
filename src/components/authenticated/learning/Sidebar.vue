@@ -34,7 +34,7 @@
                         </button>
                     </li>
                     <li>
-                        <button @click.prevent="$router.push('/auth/learning')"
+                        <button @click.prevent="$router.push('/auth/learning/admin/addsession')"
                             class="w-full text-white flex p-2 rounded-md hover:bg-gray-700 hover:shadow-lg transition-all duration-200">
                             <UserIcon class="h-6 w-6" />
                             <span v-show="sidebarOpen" class="ml-4 transition-opacity duration-500"
@@ -42,7 +42,7 @@
                         </button>
                     </li>
                     <li>
-                        <button @click.prevent="$router.push('/auth/learning')"
+                        <button @click.prevent="$router.push('/auth/learning/admin/dashboard')"
                             class="w-full text-white flex p-2 rounded-md hover:bg-gray-700 hover:shadow-lg transition-all duration-200">
                             <CogIcon class="h-6 w-6" />
                             <span v-show="sidebarOpen" class="ml-4 transition-opacity duration-500"
