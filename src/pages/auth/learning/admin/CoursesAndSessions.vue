@@ -65,7 +65,9 @@
                     <div class="bg-white rounded-lg shadow-md py-6">
                         <div class="flex items-center justify-between px-6">
                             <h2 class="text-2xl font-semibold">Edit Courses</h2>
-                            <Button @click="$router.push('/auth/learning/admin/addcourse')">Add Course</Button>
+                            <DropdownButton buttonText="Add Course" :dropdownOptions="[
+                { label: 'Bulk import', value: 'bulk-import' },
+            ]" @optionSelected="handleOptionSelected" @buttonClick="handleMainButtonClick" />
                         </div>
                         <div class="flex mt-4 space-x-4 justify-between px-6">
                             <Select v-model="selectedCategory">
@@ -82,7 +84,8 @@
                             <Input v-model="searchQuery" placeholder="Search courses..." class="max-w-[300px]" />
                         </div>
                         <div class="flex md:justify-start sm:flex-wrap justify-center mt-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 4xl:grid-cols-7 5xl:grid-cols-8 6xl:grid-cols-9 gap-6 mx-6">
+                            <div
+                                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 4xl:grid-cols-7 5xl:grid-cols-8 6xl:grid-cols-9 gap-6 mx-6">
                                 <!-- Course Grid -->
                                 <div v-for="course in filteredCourses" :key="course.courseId"
                                     @click="navigateToEditCourse(course)"
@@ -97,7 +100,7 @@
                                     <div
                                         class="p-4 relative z-10 flex flex-col -mt-8 group-hover:-mt-12 transition-all duration-300">
                                         <h3 class="text-lg font-semibold mb-2">{{ course.title }}</h3>
-                                        <div class="text-sm text-gray-600 mb-2 h-9 overflow-hidden group-hover:h-[50px] transition-all duration-300"
+                                        <div class="text-sm line-clamp-2 group-hover:line-clamp-3 text-gray-600 mb-2 h-9 overflow-hidden group-hover:h-[50px] transition-all duration-300"
                                             v-html="course.description"></div>
                                     </div>
                                     <div
@@ -109,7 +112,7 @@
                                     </div>
                                     <Button
                                         class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                        variant="secondary" size="sm">
+                                        variant="secondary" size="sm" @click="viewLiveCourse(course)">
                                         View live
                                     </Button>
                                 </div>
@@ -132,8 +135,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import AdminSidebar from '@/components/authenticated/learning/admin/AdminSidebar.vue';
-import SessionManagementForm from '@/components/authenticated/learning/admin/forms/SessionManagementForm.vue';
-import CourseManagementForm from '@/components/authenticated/learning/admin/forms/CourseManagementForm.vue';
+import DropdownButton from '@/components/common/buttons/DropdownButton.vue';
 import router from '@/router';
 import { useHashNavigation } from '@/utils/useHashNavigation';
 
@@ -141,23 +143,19 @@ const courses = ref([]);
 const upcomingSessions = ref([]);
 const selectedCategory = ref('all');
 const searchQuery = ref('');
-const isSessionModalOpen = ref(false);
-const isCourseModalOpen = ref(false);
-const selectedSession = ref(null);
-const selectedCourse = ref(null);
 const { activeTab, updateHash } = useHashNavigation('upcomingsessions', ['editcourses', 'upcomingsessions']);
 
 const coursesCollection = collection(firestore, 'learningManagementSystem/tempestStudios/courses');
 
 onMounted(async () => {
-  try {
-    const snapshot = await getDocs(coursesCollection);
-    courses.value = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-  } catch (error) {
-    console.error('Error fetching courses:', error);
-  } finally {
-    updateHash(activeTab.value);
-  }
+    try {
+        const snapshot = await getDocs(coursesCollection);
+        courses.value = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    } catch (error) {
+        console.error('Error fetching courses:', error);
+    } finally {
+        updateHash(activeTab.value);
+    }
 });
 
 const navigateToEditCourse = (course) => {
@@ -165,6 +163,16 @@ const navigateToEditCourse = (course) => {
         name: 'LMS Admin - Edit Course',
         params: { id: course.id },
     });
+};
+
+const handleOptionSelected = (option) => {
+    if (option === 'bulk-import') {
+        router.push('/auth/learning/admin/bulkimport');
+    }
+};
+
+const handleMainButtonClick = () => {
+  router.push('/auth/learning/admin/addcourse')
 };
 
 const viewLiveCourse = (course) => {

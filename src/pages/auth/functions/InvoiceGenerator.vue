@@ -1,20 +1,20 @@
 <template>
   <div class="bg-gray-300 justify-center w-full min-h-[--adjusted-height] pt-[--header-height]">
-    <Card class="shadow-lg max-w-4xl h-[1050px] p-6 my-6">
+    <Card class="relative shadow-lg max-w-4xl h-[1050px] p-6 my-6">
       <CardHeader>
         <CardTitle class="text-2xl w-full text-right font-bold mb-4">INVOICE</CardTitle>
       </CardHeader>
       <CardContent>
-        <div class="flex justify-between mb-6">
+        <div class="absolute top-8 left-8">
+            <div class="w-32 h-32 bg-gray-400 flex items-center justify-center rounded">
+              <span class="text-white text-2xl">+</span>
+            </div>
+          </div>
+        <div class="flex justify-end mb-6">
           <div class="flex flex-col">
             <Input v-model="invoice.email" placeholder="Email" class="mb-2 border-transparent shadow-none hover:border-blue-400 transition-all duration-300 ease-in-out" />
             <Input v-model="invoice.phone" placeholder="Phone" class="mb-2 border-transparent shadow-none hover:border-blue-400 transition-all duration-300 ease-in-out" />
             <Input v-model="invoice.abn" placeholder="ABN" class="border-transparent shadow-none hover:border-blue-400 transition-all duration-300 ease-in-out" />
-          </div>
-          <div class="flex flex-col items-end">
-            <div class="w-32 h-32 bg-gray-400 flex items-center justify-center rounded">
-              <span class="text-white text-2xl">+</span>
-            </div>
           </div>
         </div>
 

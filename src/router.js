@@ -335,7 +335,7 @@ const routes = [
   },
 
   // -------------------------------- AUTH --------------------------------
-  
+
   {
     path: '/auth/home',
     alias: '/auth/home',
@@ -474,12 +474,12 @@ const routes = [
       inProgress: false,
     },
   },
-  
+
   // -------------------------------- LEARNING MANAGEMENT SYSTEM --------------------------------
 
   {
     path: '/auth/learning/admin/dashboard',
-    alias: [ '/auth/learning/admin/dashboard/', '/auth/learning/admin', '/auth/learning/admin/' ],
+    alias: ['/auth/learning/admin/dashboard/', '/auth/learning/admin', '/auth/learning/admin/'],
     name: 'LMS Admin - Dashboard',
     component: () => import('@/pages/auth/learning/admin/Dashboard.vue'),
     meta: {
@@ -506,7 +506,7 @@ const routes = [
   },
   {
     path: '/auth/learning/home',
-    alias: [ '/auth/learning/', '/auth/learning/home/', '/auth/learning' ],
+    alias: ['/auth/learning/', '/auth/learning/home/', '/auth/learning'],
     name: 'Learning Management System',
     component: () => import('@/pages/auth/learning/Home.vue'),
     meta: {
@@ -533,7 +533,7 @@ const routes = [
   },
   {
     path: '/auth/learning/admin/addcourse',
-    alias: [ '/auth/learning/admin/addcourse/', '/auth/learning/admin/add-course', '/auth/learning/admin/add-course/' ],
+    alias: ['/auth/learning/admin/addcourse/', '/auth/learning/admin/add-course', '/auth/learning/admin/add-course/'],
     name: 'LMS Admin - Add Course',
     component: () => import('@/pages/auth/learning/admin/AddCourse.vue'),
     meta: {
@@ -560,7 +560,7 @@ const routes = [
   },
   {
     path: '/auth/learning/admin/courses/:id/edit',
-    alias: [ '/auth/learning/admin/courses/:id/edit/' ],
+    alias: ['/auth/learning/admin/courses/:id/edit/'],
     name: 'LMS Admin - Edit Course',
     component: () => import('@/pages/auth/learning/admin/EditCourse.vue'),
     meta: {
@@ -587,7 +587,7 @@ const routes = [
   },
   {
     path: '/auth/learning/admin/courses/:id/sessions',
-    alias: [ '/auth/learning/admin/courses/:id/sessions/' ],
+    alias: ['/auth/learning/admin/courses/:id/sessions/'],
     name: 'LMS Admin - Sessions',
     component: () => import('@/pages/auth/learning/admin/EditCourse.vue'),
     meta: {
@@ -614,7 +614,7 @@ const routes = [
   },
   {
     path: '/auth/learning/admin/courses/:id/sessions/edit',
-    alias: [ '/auth/learning/admin/courses/:id/sessions/edit/' ],
+    alias: ['/auth/learning/admin/courses/:id/sessions/edit/'],
     name: 'LMS Admin - Edit Sessions',
     component: () => import('@/pages/auth/learning/admin/EditCourse.vue'),
     meta: {
@@ -641,7 +641,7 @@ const routes = [
   },
   {
     path: '/auth/learning/admin/courses',
-    alias: [ '/auth/learning/admin/courses/', '/auth/learning/admin/course', '/auth/learning/admin/course/' ],
+    alias: ['/auth/learning/admin/courses/', '/auth/learning/admin/course', '/auth/learning/admin/course/'],
     name: 'LMS Admin - Courses and Sessions',
     component: () => import('@/pages/auth/learning/admin/CoursesAndSessions.vue'),
     meta: {
@@ -668,7 +668,7 @@ const routes = [
   },
   {
     path: '/auth/learning/admin/addsession',
-    alias: [ '/auth/learning/admin/addsession/', '/auth/learning/admin/add-session', '/auth/learning/admin/add-session/' ],
+    alias: ['/auth/learning/admin/addsession/', '/auth/learning/admin/add-session', '/auth/learning/admin/add-session/'],
     name: 'LMS Admin - Add Session',
     component: () => import('@/pages/auth/learning/admin/AddSession.vue'),
     meta: {
@@ -686,6 +686,258 @@ const routes = [
         {
           property: 'og:description',
           content: 'Learning Management System page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+
+  // -------------------------------- ACCOUNTING MODULE --------------------------------
+
+  {
+    path: '/auth/accounting/home',
+    alias: ['/auth/accounting/', '/auth/accounting/dashboard'],
+    name: 'Accounting - Dashboard',
+    component: () => import('@/pages/auth/accounting/AccountingHome.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Accounting Dashboard',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Accounting dashboard accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Accounting Dashboard - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Accounting dashboard accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/accounting/contacts',
+    name: 'Accounting - Contacts',
+    component: () => import('@/pages/auth/accounting/AccountingContacts.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Accounting Contacts',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Manage accounting contacts for Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Accounting Contacts - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Manage accounting contacts for Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/accounting/quotes',
+    name: 'Accounting - Quotes',
+    component: () => import('@/components/authenticated/accounting/QuoteCreator.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Create Quote',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Create and manage quotes for Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Create Quote - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Create and manage quotes for Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/accounting/invoices',
+    name: 'Accounting - Invoices',
+    component: () => import('@/components/authenticated/accounting/InvoiceCreator.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Create Invoice',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Create and manage invoices for Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Create Invoice - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Create and manage invoices for Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/accounting/receipts',
+    name: 'Accounting - Receipts',
+    component: () => import('@/components/authenticated/accounting/ReceiptCreator.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Create Receipt',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Create and manage receipts for Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Create Receipt - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Create and manage receipts for Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/accounting/documents',
+    name: 'Accounting - Documents',
+    component: () => import('@/components/authenticated/accounting/FinancialDocuments.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Financial Documents',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'View and manage all financial documents for Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Financial Documents - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'View and manage all financial documents for Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/accounting/settings',
+    name: 'Accounting - Settings',
+    component: () => import('@/pages/auth/accounting/AccountingSettings.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Accounting Settings',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Manage accounting settings for Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Accounting Settings - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Manage accounting settings for Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/accounting/transactions',
+    name: 'Accounting - Transactions',
+    component: () => import('@/pages/auth/accounting/TransactionHistory.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Transaction History',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'View and manage transaction history for Maso.au'
+        },
+        {
+          property: 'og:title',
+          content: 'Transaction History - Maso.au'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/accounting/transactions/:id',
+    name: 'Accounting - Transaction Details',
+    component: () => import('@/components/authenticated/accounting/TransactionDetails.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Transaction Details',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'View transaction details for Maso.au'
+        },
+        {
+          property: 'og:title',
+          content: 'Transaction Details - Maso.au'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/accounting/clients/:id',
+    name: 'Accounting - Client Detail',
+    component: () => import('@/components/authenticated/accounting/ClientDetails.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Client Detail',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'View client details and transactions for Maso.au'
+        },
+        {
+          property: 'og:title',
+          content: 'Client Detail - Maso.au'
         }
       ],
       requiresOverlay: false,

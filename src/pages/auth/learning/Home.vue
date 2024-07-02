@@ -648,4 +648,3 @@ function formattedDates(course) {
   position: absolute;
 }
 </style>
-/* I have built this end user session selection page, for upcoming courses. I have also built this page that allows admins to create new courses, now I would like for you to create me a page where an admin can see all the courses in a grid array, then select one and add a session to it, or view in detail current sessions for the selected courses */

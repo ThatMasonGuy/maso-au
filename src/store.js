@@ -13,6 +13,7 @@ const store = createStore({
     isLoading: false,
     isNewUser: false,
     isAdmin: false,
+    accountingSettings: null,
   },
   getters: {
     portfolio: (state) => state.portfolio,
@@ -22,6 +23,7 @@ const store = createStore({
     isLoading: (state) => state.isLoading,
     isNewUser: (state) => state.isNewUser,
     isAdmin: (state) => state.isAdmin,
+    accountingSettings: (state) => state.accountingSettings,
   },
   mutations: {
     SET_LOADING(state, isLoading) {
@@ -62,6 +64,9 @@ const store = createStore({
     },
     SET_IS_ADMIN(state, isAdmin) {
       state.isAdmin = isAdmin;
+    },
+    SET_ACCOUNTING_SETTINGS(state, accountingSettings) {
+      state.accountingSettings = accountingSettings;
     },
     CLEAR_USER(state) {
       state.user = null;
@@ -143,6 +148,21 @@ const store = createStore({
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
+      }
+    },
+    async fetchAccountingSettings({ commit }) {
+      try {
+        const userId = auth.currentUser.uid;
+        const settingsRef = doc(firestore, `users/${userId}/accounting/details`);
+        const settingsSnap = await getDoc(settingsRef);
+
+        if (settingsSnap.exists()) {
+          const settings = settingsSnap.data();
+          commit('SET_ACCOUNTING_SETTINGS', settings);
+        }
+      } catch (error) {
+        console.error('Error fetching accounting settings:', error);
+        throw error;
       }
     },
     logoutUser({ commit }) {

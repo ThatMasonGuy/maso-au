@@ -11,37 +11,46 @@
       </p>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div class="bg-white rounded-lg shadow-lg p-6">
-          <h2 class="text-2xl font-semibold mb-4">Your Profile</h2>
-          <p class="text-[var(--text-700)]">Manage your personal information and update your settings.</p>
-          <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Edit Profile</button>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg p-6">
-          <h2 class="text-2xl font-semibold mb-4">Notifications</h2>
-          <p class="text-[var(--text-700)]">View your latest notifications and updates.</p>
-          <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Notifications</button>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg p-6">
-          <h2 class="text-2xl font-semibold mb-4">Settings</h2>
-          <p class="text-[var(--text-700)]">Adjust your account preferences and application settings.</p>
-          <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Go to Settings</button>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="justify-between flex w-full">
           <h2 class="text-2xl font-semibold mb-4">Learning Management System</h2>
-          <p class="text-[var(--text-700)]">Head to the currently in development learning management system by Tempest Studios.</p>
-          <button @click="$router.push('/auth/learning/')" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Check it out</button>
+          <p class="text-sm underline underline-offset-1 text-gray-600">In progress</p>
         </div>
-        <div class="bg-white rounded-lg shadow-lg p-6">
-          <h2 class="text-2xl font-semibold mb-4">Dashboard</h2>
-          <p class="text-[var(--text-700)]">Overview of your recent activities and analytics.</p>
-          <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Dashboard</button>
+        <p class="text-[var(--text-700)]">Head to the currently in development learning management system by Tempest
+          Studios.</p>
+        <button @click="$router.push('/auth/learning/')"
+          class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Check it out</button>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="justify-between flex w-full">
+          <h2 class="text-2xl font-semibold mb-4">Accounting Platform</h2>
+          <p class="text-sm underline underline-offset-1 text-gray-600">In progress</p>
         </div>
-        <div class="bg-white rounded-lg shadow-lg p-6">
-          <h2 class="text-2xl font-semibold mb-4">Messages</h2>
-          <p class="text-[var(--text-700)]">Check your messages and communicate with other users.</p>
-          <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Messages</button>
-        </div>
+        <p class="text-[var(--text-700)]">A basic accounting platform for smal businesses or sole traders.</p>
+        <button @click="$router.push('/auth/accounting/')"
+        class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Dashboard</button>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">Your Profile</h2>
+        <p class="text-[var(--text-700)]">Manage your personal information and update your settings.</p>
+        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Edit Profile</button>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">Notifications</h2>
+        <p class="text-[var(--text-700)]">View your latest notifications and updates.</p>
+        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Notifications</button>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">Settings</h2>
+        <p class="text-[var(--text-700)]">Adjust your account preferences and application settings.</p>
+        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Go to Settings</button>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">Messages</h2>
+        <p class="text-[var(--text-700)]">Check your messages and communicate with other users.</p>
+        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Messages</button>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
