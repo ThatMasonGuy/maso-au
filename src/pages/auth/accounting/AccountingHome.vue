@@ -139,7 +139,7 @@ function formatCurrency(value) {
 onMounted(async () => {
   try {
     const userId = auth.currentUser.uid;
-    const accountingRef = doc(firestore, `users/${userId}/accounting/settings`);
+    const accountingRef = doc(firestore, `users/${userId}/accounting/details`);
     const accountingDoc = await getDoc(accountingRef);
     
     if (!accountingDoc.exists()) {

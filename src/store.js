@@ -1,8 +1,8 @@
 import { createStore } from 'vuex';
-import { firestore } from '@/firebase';
 import createPersistedState from 'vuex-persistedstate';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth } from './firebase';
+import { auth, firestore, storage } from '@/firebase';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
 const store = createStore({
   state: {
@@ -13,7 +13,28 @@ const store = createStore({
     isLoading: false,
     isNewUser: false,
     isAdmin: false,
-    accountingSettings: null,
+    accountingSettings: {
+      general: {
+        currency: 'AUD',
+        gstRegistered: true,
+        taxRate: 10,
+        invoicePrefix: 'INV-',
+        startingNumber: '00001',
+        receiveNotifications: false,
+      },
+      account: {
+        businessName: '',
+        businessLogo: '',
+        businessAddress: '',
+        businessPhone: '',
+        businessNumber: '',
+        bankDetails: {
+          accountName: '',
+          accountNumber: '',
+          bsbNumber: '',
+        },
+      },
+    },
   },
   getters: {
     portfolio: (state) => state.portfolio,
@@ -65,8 +86,8 @@ const store = createStore({
     SET_IS_ADMIN(state, isAdmin) {
       state.isAdmin = isAdmin;
     },
-    SET_ACCOUNTING_SETTINGS(state, accountingSettings) {
-      state.accountingSettings = accountingSettings;
+    SET_ACCOUNTING_SETTINGS(state, settings) {
+      state.accountingSettings = { ...state.accountingSettings, ...settings };
     },
     CLEAR_USER(state) {
       state.user = null;
@@ -150,20 +171,47 @@ const store = createStore({
         console.error('Error fetching user data:', error);
       }
     },
-    async fetchAccountingSettings({ commit }) {
-      try {
-        const userId = auth.currentUser.uid;
-        const settingsRef = doc(firestore, `users/${userId}/accounting/details`);
-        const settingsSnap = await getDoc(settingsRef);
+    async fetchAccountingSettings({ commit, rootState }) {
+      const userId = rootState.user.uid;
+      const settingsRef = doc(firestore, `users/${userId}/accounting/details`);
+      const settingsSnap = await getDoc(settingsRef);
 
-        if (settingsSnap.exists()) {
-          const settings = settingsSnap.data();
-          commit('SET_ACCOUNTING_SETTINGS', settings);
-        }
-      } catch (error) {
-        console.error('Error fetching accounting settings:', error);
-        throw error;
+      if (settingsSnap.exists()) {
+        commit('SET_ACCOUNTING_SETTINGS', settingsSnap.data());
       }
+    },
+    async createOrUpdateAccountingSettings({ commit, rootState }, newSettings) {
+      const userId = rootState.user.uid;
+      const settingsRef = doc(firestore, `users/${userId}/accounting/details`);
+      
+      const settingsSnap = await getDoc(settingsRef);
+      
+      if (settingsSnap.exists()) {
+        await updateDoc(settingsRef, newSettings);
+      } else {
+        await setDoc(settingsRef, newSettings);
+      }
+      
+      commit('SET_ACCOUNTING_SETTINGS', newSettings);
+    },
+    async uploadLogo({ rootState }, file) {
+      const userId = rootState.user.uid;
+      const storagePath = `users/${userId}/accounting/myLogo/`;
+      const logoRef = ref(storage, storagePath);
+
+      const list = await listAll(logoRef);
+      const fileNames = list.items.map(item => item.name);
+
+      let newFileName = 'logo1';
+      let index = 1;
+      while (fileNames.includes(newFileName)) {
+        index += 1;
+        newFileName = `logo${index}`;
+      }
+
+      const newLogoRef = ref(storage, `${storagePath}${newFileName}`);
+      const snapshot = await uploadBytes(newLogoRef, file);
+      return await getDownloadURL(snapshot.ref);
     },
     logoutUser({ commit }) {
       commit('CLEAR_USER');

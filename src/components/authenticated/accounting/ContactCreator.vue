@@ -18,7 +18,7 @@
                 <div>
                     <Label class="ml-1" for="type">Type</Label>
                     <Tooltip>
-                        <TooltipTrigger asChild>
+                        <TooltipTrigger as-child>
                             <Select v-model="contact.type">
                                 <SelectTrigger id="type">
                                     <SelectValue placeholder="Select type" />

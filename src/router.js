@@ -4,6 +4,9 @@ import Home from '@/pages/Home.vue';
 import Settings from '@/pages/Settings.vue';
 import RedirectHandler from '@/pages/RedirectHandler.vue';
 import store from './store';
+import { useLoading } from '@/utils/useLoading';
+
+const { startLoading, stopLoading } = useLoading();
 
 const routes = [
 
@@ -475,7 +478,64 @@ const routes = [
     },
   },
 
-  // -------------------------------- LEARNING MANAGEMENT SYSTEM --------------------------------
+  // -------------------------------- SUPER ADMIN --------------------------------
+
+  {
+    path: '/auth/admin',
+    alias: '/auth/admin/',
+    name: 'Super Admin',
+    component: () => import('@/pages/auth/admin/SuperAdmin.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Super Admin',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Super Admin page accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Super Admin - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Super Admin page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+  {
+    path: '/auth/admin/my-settings',
+    alias: ['/auth/admin/my-settings/', '/auth/admin/my-setting', '/auth/admin/my-setting/'],
+    name: 'Super Admin - My Settings',
+    component: () => import('@/pages/auth/admin/UserSettings.vue'),
+    meta: {
+      requiresAuth: true,
+      title: 'Super Admin - My Settings',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Super Admin page accessible only to authorized users of Maso.au.'
+        },
+        {
+          property: 'og:title',
+          content: 'Super Admin - Maso.au'
+        },
+        {
+          property: 'og:description',
+          content: 'Super Admin page accessible only to authorized users of Maso.au.'
+        }
+      ],
+      requiresOverlay: false,
+      requiresAuthOverlay: false,
+      inProgress: false,
+    },
+  },
+
+  // -------------------------------- LEARNING MODULE --------------------------------
 
   {
     path: '/auth/learning/admin/dashboard',
@@ -992,6 +1052,8 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  startLoading();
+
   if (to.meta.inProgress) {
     to.matched.forEach((record) => {
       record.components.default = InProgress;
@@ -1016,29 +1078,11 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  // Handle dynamic meta tags
-  const nearestWithTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title);
-  const nearestWithMeta = to.matched.slice().reverse().find(r => r.meta && r.meta.metaTags);
-
-  if (nearestWithTitle) document.title = nearestWithTitle.meta.title;
-
-  Array.from(document.querySelectorAll('[data-vue-router-controlled]')).map(el => el.parentNode.removeChild(el));
-
-  if (nearestWithMeta) {
-    nearestWithMeta.meta.metaTags.map(tagDef => {
-      const tag = document.createElement('meta');
-
-      Object.keys(tagDef).forEach(key => {
-        tag.setAttribute(key, tagDef[key]);
-      });
-
-      tag.setAttribute('data-vue-router-controlled', '');
-
-      return tag;
-    }).forEach(tag => document.head.appendChild(tag));
-  }
-
   next();
+});
+
+router.afterEach(() => {
+  stopLoading();
 });
 
 export default router;

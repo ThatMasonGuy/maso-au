@@ -2,44 +2,44 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /users/{userId} {
-      // Allow read access only to the authenticated user
-      allow read: if request.auth != null && request.auth.uid == userId;
 
-      // Allow write access (create, update, delete) only to the authenticated user
-      allow write: if request.auth != null && request.auth.uid == userId;
+    function isAdmin() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
 
-      // Allow account creation by the Cloud Function
-      allow create: if request.auth != null && request.auth.uid == userId ||
+    match /users/{userId}/{document=**} {
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow create: if request.auth != null && (request.auth.uid == userId || isAdmin()) ||
                        request.auth == null && request.resource.data.keys().hasAll(['firstName', 'lastName', 'userName', 'emailAddress', 'phoneNumber', 'country']);
     }
     
     match /shortenedUrls/{document=**} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if request.auth != null && isAdmin();
       allow update: if (request.auth != null && request.auth.uid == resource.data.writtenBy) || 
                       request.resource.data.diff(resource.data).affectedKeys().hasOnly(['viewCount', 'viewTimestamps']);
     }
     
     match /joinUrls/{document=**} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if request.auth != null && isAdmin();
       allow update: if request.auth != null && request.auth.uid == resource.data.writtenBy;
     }
 
     match /websiteData/{document=**} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
+      allow read: if request.auth != null || isAdmin();
+      allow write: if request.auth != null || isAdmin();
+    }
+    
+    match /excalidrawData/{userId} {
+      allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
     }
 
-    match /websiteData/{document=**} {
-      allow read: if true;
-      allow write: if true;
-    }
-
-    // Deny all other reads and writes
     match /{document=**} {
-      allow read, write: if false;
+      allow read: if request.auth != null && isAdmin();
+      allow write: if request.auth != null && isAdmin();
+      allow update: if false;
     }
   }
 }

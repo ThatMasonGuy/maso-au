@@ -211,6 +211,7 @@ export const initializeAuth = (store) => {
           const userData = userDocSnapshot.data();
           store.commit('SET_USER', userData);
           await store.dispatch('fetchUserData');
+          await store.dispatch('fetchAccountingSettings');
           await checkAdminStatus(user, store);
         } else {
           console.warn('User data not found in Firestore. Retrying in 2 seconds...');
@@ -220,6 +221,7 @@ export const initializeAuth = (store) => {
               const userData = retryUserDocSnapshot.data();
               store.commit('SET_USER', userData);
               await store.dispatch('fetchUserData');
+              await store.dispatch('fetchAccountingSettings');
             } else {
               console.error('User data not found in Firestore after retry.');
               store.commit('SET_NEW_USER', true);
