@@ -31,7 +31,7 @@
                             required v-model="password" />
                     </div>
                     <div class="flex items-center -mt-2">
-                        <Checkbox v-model="rememberMe" />
+                        <Checkbox id="rememberMe" v-model="rememberMe" />
                         <Label for="rememberMe" class="ml-2">Remember Me</Label>
                     </div>
                     <Button type="submit" class="w-full">

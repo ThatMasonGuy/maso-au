@@ -1,7 +1,7 @@
 <template>
     <Card>
         <CardHeader>
-            <CardTitle>Cloud Storage Explorer</CardTitle>
+            <CardTitle class="text-xl">Storage Explorer</CardTitle>
         </CardHeader>
         <CardContent>
             <div class="mb-4">

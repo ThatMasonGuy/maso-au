@@ -341,7 +341,7 @@ const routes = [
 
   {
     path: '/auth/home',
-    alias: '/auth/home',
+    alias: ['/auth/home/', '/auth/', '/auth'],
     name: 'Auth Home',
     component: () => import('@/pages/auth/Home.vue'),
     meta: {
@@ -368,7 +368,7 @@ const routes = [
   },
   {
     path: '/auth/functions',
-    alias: '/auth/function',
+    alias: ['/auth/function', '/auth/function/', '/auth/functions/'],
     name: 'Functions',
     component: () => import('@/pages/auth/Functions.vue'),
     meta: {
@@ -395,7 +395,7 @@ const routes = [
   },
   {
     path: '/auth/dashboard',
-    alias: '/auth/dashboard',
+    alias: '/auth/dashboard/',
     name: 'Dashboard',
     component: () => import('@/pages/auth/Dashboard.vue'),
     meta: {
@@ -425,7 +425,7 @@ const routes = [
 
   {
     path: '/auth/functions/url-shortener',
-    alias: '/auth/functions/url-shortener',
+    alias: ['/auth/functions/url-shortener/', '/auth/functions/urlshortener', '/auth/functions/urlshortener/'],
     name: 'Url Shortener',
     component: () => import('@/pages/auth/functions/UrlShortener.vue'),
     meta: {
@@ -452,7 +452,7 @@ const routes = [
   },
   {
     path: '/auth/functions/invoice-generator',
-    alias: '/auth/functions/invoice-generator',
+    alias: ['/auth/functions/invoice-generator/', '/auth/functions/invoicegenerator', '/auth/functions/invoicegenerator/'],
     name: 'Invoice Generator',
     component: () => import('@/pages/auth/functions/InvoiceGenerator.vue'),
     meta: {
@@ -505,6 +505,7 @@ const routes = [
       requiresOverlay: false,
       requiresAuthOverlay: false,
       inProgress: false,
+      requiresAdmin: true,
     },
   },
   {
@@ -532,6 +533,7 @@ const routes = [
       requiresOverlay: false,
       requiresAuthOverlay: false,
       inProgress: false,
+      requiresAdmin: true,
     },
   },
 
@@ -758,7 +760,7 @@ const routes = [
 
   {
     path: '/auth/accounting/home',
-    alias: ['/auth/accounting/', '/auth/accounting/dashboard'],
+    alias: ['/auth/accounting/home/', '/auth/accounting/dashboard', '/auth/accounting/dashboard/', '/auth/accounting/', '/auth/accounting'],
     name: 'Accounting - Dashboard',
     component: () => import('@/pages/auth/accounting/AccountingHome.vue'),
     meta: {
@@ -785,6 +787,7 @@ const routes = [
   },
   {
     path: '/auth/accounting/contacts',
+    alias: ['/auth/accounting/contacts/', '/auth/accounting/contact/', '/auth/accounting/contact'],
     name: 'Accounting - Contacts',
     component: () => import('@/pages/auth/accounting/AccountingContacts.vue'),
     meta: {
@@ -811,6 +814,7 @@ const routes = [
   },
   {
     path: '/auth/accounting/quotes',
+    alias: ['/auth/accounting/quotes/', '/auth/accounting/quote/', '/auth/accounting/quote'],
     name: 'Accounting - Quotes',
     component: () => import('@/components/authenticated/accounting/QuoteCreator.vue'),
     meta: {
@@ -837,6 +841,7 @@ const routes = [
   },
   {
     path: '/auth/accounting/invoices',
+    alias: ['/auth/accounting/invoices/', '/auth/accounting/invoice/', '/auth/accounting/invoice'],
     name: 'Accounting - Invoices',
     component: () => import('@/components/authenticated/accounting/InvoiceCreator.vue'),
     meta: {
@@ -863,6 +868,7 @@ const routes = [
   },
   {
     path: '/auth/accounting/receipts',
+    alias: ['/auth/accounting/receipts/', '/auth/accounting/receipt/', '/auth/accounting/receipt'],
     name: 'Accounting - Receipts',
     component: () => import('@/components/authenticated/accounting/ReceiptCreator.vue'),
     meta: {
@@ -889,6 +895,7 @@ const routes = [
   },
   {
     path: '/auth/accounting/documents',
+    alias: ['/auth/accounting/documents/', '/auth/accounting/document/', '/auth/accounting/document'],
     name: 'Accounting - Documents',
     component: () => import('@/components/authenticated/accounting/FinancialDocuments.vue'),
     meta: {
@@ -915,6 +922,7 @@ const routes = [
   },
   {
     path: '/auth/accounting/settings',
+    alias: ['/auth/accounting/settings/', '/auth/accounting/setting/', '/auth/accounting/setting'],
     name: 'Accounting - Settings',
     component: () => import('@/pages/auth/accounting/AccountingSettings.vue'),
     meta: {
@@ -941,6 +949,7 @@ const routes = [
   },
   {
     path: '/auth/accounting/transactions',
+    alias: ['/auth/accounting/transactions/', '/auth/accounting/transaction/', '/auth/accounting/transaction'],
     name: 'Accounting - Transactions',
     component: () => import('@/pages/auth/accounting/TransactionHistory.vue'),
     meta: {
@@ -963,6 +972,7 @@ const routes = [
   },
   {
     path: '/auth/accounting/transactions/:id',
+    alias: ['/auth/accounting/transactions/:id/', '/auth/accounting/transaction/:id', '/auth/accounting/transaction/:id/'],
     name: 'Accounting - Transaction Details',
     component: () => import('@/components/authenticated/accounting/TransactionDetails.vue'),
     meta: {
@@ -985,6 +995,7 @@ const routes = [
   },
   {
     path: '/auth/accounting/clients/:id',
+    alias: ['/auth/accounting/clients/:id/', '/auth/accounting/client/:id', '/auth/accounting/client/:id/'],
     name: 'Accounting - Client Detail',
     component: () => import('@/components/authenticated/accounting/ClientDetails.vue'),
     meta: {
@@ -1075,6 +1086,16 @@ router.beforeEach((to, from, next) => {
       } else {
         return next();
       }
+    }
+  }
+
+  if (to.meta.requiresAdmin) {
+    const user = store.getters.user;
+
+    if (!user && !user.isAdmin) {
+      return next('/login');
+    } else {
+      return next();
     }
   }
 

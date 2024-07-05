@@ -58,7 +58,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { auth } from '@/firebase';
+import { auth, firestore } from '@/firebase';
 import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import AccountingSidebar from '@/components/authenticated/accounting/AccountingSidebar.vue';
 import AddContact from '@/components/authenticated/accounting/ContactCreator.vue';
@@ -66,7 +66,6 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from 'vue-sonner';
 
-const db = getFirestore();
 const contacts = ref([]);
 const isAddingContact = ref(false);
 const editingContact = ref(null);
@@ -86,7 +85,7 @@ onMounted(async () => {
 
 const fetchContacts = async () => {
     const userId = auth.currentUser.uid;
-    const contactsRef = collection(db, `users/${userId}/accounting/settings/contacts`);
+    const contactsRef = collection(firestore, `users/${userId}/accounting/details/contacts`);
     const querySnapshot = await getDocs(contactsRef);
     contacts.value = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
@@ -105,7 +104,7 @@ const deleteContact = async (contact) => {
     if (confirm('Are you sure you want to delete this contact?')) {
         try {
             const userId = auth.currentUser.uid;
-            await deleteDoc(doc(db, `users/${userId}/accounting/settings/contacts`, contact.id));
+            await deleteDoc(doc(firestore, `users/${userId}/accounting/details/contacts`, contact.id));
             contacts.value = contacts.value.filter(c => c.id !== contact.id);
             toast.success('Contact deleted successfully');
         } catch (error) {
@@ -119,7 +118,7 @@ const saveContact = async (contactData) => {
     try {
         const userId = auth.currentUser.uid;
         if (editingContact.value) {
-            const contactRef = doc(db, `users/${userId}/accounting/settings/contacts`, editingContact.value.id);
+            const contactRef = doc(firestore, `users/${userId}/accounting/details/contacts`, editingContact.value.id);
             await updateDoc(contactRef, contactData);
             const index = contacts.value.findIndex(c => c.id === editingContact.value.id);
             if (index !== -1) {
@@ -127,7 +126,7 @@ const saveContact = async (contactData) => {
             }
             toast.success('Contact updated successfully');
         } else {
-            const docRef = await addDoc(collection(db, `users/${userId}/accounting/settings/contacts`), contactData);
+            const docRef = await addDoc(collection(firestore, `users/${userId}/accounting/details/contacts`), contactData);
             contacts.value.push({ id: docRef.id, ...contactData });
             toast.success('Contact added successfully');
         }

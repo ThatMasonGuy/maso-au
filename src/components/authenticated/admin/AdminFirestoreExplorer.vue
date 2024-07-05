@@ -1,7 +1,7 @@
 <template>
     <Card>
         <CardHeader>
-            <CardTitle>Firestore Explorer</CardTitle>
+            <CardTitle class="text-xl">Firestore Explorer</CardTitle>
         </CardHeader>
         <CardContent>
             <div class="mb-4">

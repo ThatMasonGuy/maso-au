@@ -1,55 +1,65 @@
 <template>
-    <div class="p-6">
-        <h2 class="text-2xl font-bold mb-4">User Settings</h2>
-        <div class="mb-4 flex justify-between items-center">
-            <Input v-model="searchQuery" placeholder="Search users..." class="max-w-xs" @input="debouncedSearch" />
-            <Button @click="fetchUsers">Refresh</Button>
-        </div>
-        <Card>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>User ID</TableHead>
-                            <TableHead>Username</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead>First Name</TableHead>
-                            <TableHead>Last Name</TableHead>
-                            <TableHead>Created At</TableHead>
-                            <TableHead>Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        <TableRow v-for="user in users" :key="user.uid">
-                            <TableCell>{{ user.uid }}</TableCell>
-                            <TableCell>{{ user.userName }}</TableCell>
-                            <TableCell>{{ user.emailAddress }}</TableCell>
-                            <TableCell>{{ user.firstName }}</TableCell>
-                            <TableCell>{{ user.lastName }}</TableCell>
-                            <TableCell>{{ formatDate(user.createdAt) }}</TableCell>
-                            <TableCell>
-                                <Button variant="outline" size="sm" class="mr-2" @click="editUser(user)">Edit</Button>
-                                <Button variant="destructive" size="sm" @click="deleteUser(user)">Delete</Button>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
-        <div class="mt-4 flex justify-between items-center">
-            <p>
-                Showing {{ (currentPage - 1) * pageSize + 1 }} -
-                {{ Math.min(currentPage * pageSize, totalUsers) }} of {{ totalUsers }} users
-            </p>
-            <div>
-                <Button :disabled="currentPage === 1" @click="changePage(currentPage - 1)" class="mr-2">
-                    Previous
-                </Button>
-                <Button :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">
-                    Next
-                </Button>
+    <Card>
+        <CardHeader>
+            <CardTitle class="text-xl mb-5">User Settings</CardTitle>
+            <div class="flex justify-between items-center">
+                <Input v-model="searchQuery" placeholder="Search users..." class="max-w-xs" @input="debouncedSearch" />
+                <Button @click="fetchUsers">Refresh</Button>
             </div>
+        </CardHeader>
+        <CardContent>
+            <Table class="mt-4">
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Username</TableHead>
+                        <TableHead>User ID</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>First Name</TableHead>
+                        <TableHead>Last Name</TableHead>
+                        <TableHead>Created At</TableHead>
+                        <TableHead class="text-right">Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow v-for="user in users" :key="user.uid">
+                        <TableCell>{{ user.userName }}</TableCell>
+                        <TableCell>{{ user.uid }}</TableCell>
+                        <TableCell>{{ user.emailAddress }}</TableCell>
+                        <TableCell>{{ user.firstName }}</TableCell>
+                        <TableCell>{{ user.lastName }}</TableCell>
+                        <TableCell>{{ formatDate(user.createdAt) }}</TableCell>
+                        <TableCell class="text-right">
+                            <Button variant="outline" size="sm" class="mr-2" @click="editUser(user)">Edit</Button>
+                            <Button variant="destructive" size="sm" @click="deleteUser(user)">Delete</Button>
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        </CardContent>
+    </Card>
+    <div class="mt-4 flex justify-between items-center">
+        <div class="text-sm text-gray-600">
+            {{ paginationText }}
         </div>
+        <Pagination v-slot="{ page }" :total="totalPages" :sibling-count="1" show-edges :default-page="currentPage"
+            @update:page="changePage">
+            <PaginationList v-slot="{ items }" class="flex items-center gap-1">
+                <PaginationFirst />
+                <PaginationPrev />
+
+                <template v-for="(item, index) in items">
+                    <PaginationListItem v-if="item.type === 'page'" :key="index" :value="item.value" as-child>
+                        <Button class="w-10 h-10 p-0" :variant="item.value === page ? 'default' : 'outline'">
+                            {{ item.value }}
+                        </Button>
+                    </PaginationListItem>
+                    <PaginationEllipsis v-else :key="item.type" :index="index" />
+                </template>
+
+                <PaginationNext />
+                <PaginationLast />
+            </PaginationList>
+        </Pagination>
     </div>
 
     <!-- Edit User Modal -->
@@ -84,21 +94,31 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { firestore } from '@/firebase';
 import { collection, getDocs, query, orderBy, limit, startAfter, updateDoc, doc, deleteDoc, where } from 'firebase/firestore';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import {
+    Pagination,
+    PaginationEllipsis,
+    PaginationFirst,
+    PaginationLast,
+    PaginationList,
+    PaginationListItem,
+    PaginationNext,
+    PaginationPrev,
+} from '@/components/ui/pagination';
 import { toast } from 'vue-sonner';
 import debounce from 'lodash/debounce';
 
 const users = ref([]);
 const currentPage = ref(1);
-const pageSize = 10;
+const pageSize = 20;
 const totalUsers = ref(0);
 const totalPages = ref(0);
 const lastVisible = ref(null);
@@ -113,7 +133,7 @@ onMounted(() => {
 
 const fetchUsers = async () => {
     try {
-        let q = query(collection(firestore, 'users'), orderBy('createdAt', 'desc'), limit(pageSize));
+        let q = query(collection(firestore, 'users'), orderBy('userName'), limit(pageSize));
 
         if (searchQuery.value) {
             q = query(q, where('userName', '>=', searchQuery.value), where('userName', '<=', searchQuery.value + '\uf8ff'));
@@ -190,6 +210,12 @@ const deleteUser = async (user) => {
         }
     }
 };
+
+const paginationText = computed(() => {
+    const start = (currentPage.value - 1) * pageSize + 1;
+    const end = Math.min(currentPage.value * pageSize, totalUsers.value);
+    return `${start} to ${end} of ${totalUsers.value}`;
+});
 
 const formatDate = (timestamp) => {
     if (!timestamp) return '';

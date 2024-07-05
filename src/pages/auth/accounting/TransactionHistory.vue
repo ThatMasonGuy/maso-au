@@ -149,7 +149,7 @@ const fetchTransactions = async () => {
     let allTransactions = [];
 
     for (const type of types) {
-        const q = query(collection(firestore, `users/${userId}/accounting/settings/${type}`));
+        const q = query(collection(firestore, `users/${userId}/accounting/details/${type}`));
         const querySnapshot = await getDocs(q);
         allTransactions = [...allTransactions, ...querySnapshot.docs.map(doc => ({
             id: doc.id,
