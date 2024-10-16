@@ -2,12 +2,6 @@
 <template>
     <div class="w-full lg:grid lg:min-h-screen lg:grid-cols-2 h-screen">
         <div class="flex flex-col items-center justify-center py-12 px-4 mx-auto">
-            <router-link to="/">
-                <Button href="/" class="absolute top-2 left-2 z-20">Return Home</Button>
-            </router-link>
-            <router-link to="/">
-                <Button href="/" class="absolute top-2 right-2 z-20">Dark Mode</Button>
-            </router-link>
             <div class="mx-auto grid w-[350px] gap-6">
                 <div class="grid gap-2 text-center">
                     <h1 class="text-3xl font-bold mb-6">Login</h1>

@@ -33,18 +33,6 @@
                         </router-link>
                     </li>
                     <li class="sm:mx-1 my-2 sm:my-0">
-                        <router-link :to="{ path: '/portfolio' }">
-                            <Button variant="link" :class="{ underline: currentPageTitle === 'Portfolio' }"
-                                class="px-1 lg:px-2">Portfolio</Button>
-                        </router-link>
-                    </li>
-                    <li class="sm:mx-1 my-2 sm:my-0">
-                        <router-link :to="{ path: '/auth/dashboard' }">
-                            <Button variant="link" :class="{ underline: currentPageTitle === 'Dashboard' }"
-                                class="px-1 lg:px-2">Dashboard</Button>
-                        </router-link>
-                    </li>
-                    <li class="sm:mx-1 my-2 sm:my-0">
                         <router-link :to="{ path: '/websites' }">
                             <Button variant="link" :class="{ underline: currentPageTitle === 'Websites' }"
                                 class="px-1 lg:px-2">Websites</Button>
@@ -93,18 +81,6 @@
                         <router-link :to="{ path: '/auth/functions' }">
                             <Button variant="link" :class="{ underline: currentPageTitle === 'Functions' }"
                                 class="px-1 lg:px-2">Functions</Button>
-                        </router-link>
-                    </li>
-                    <li class="sm:mx-1 my-2 sm:my-0">
-                        <router-link :to="{ path: '/portfolio' }">
-                            <Button variant="link" :class="{ underline: currentPageTitle === 'Portfolio' }"
-                                class="px-1 lg:px-2">Portfolio</Button>
-                        </router-link>
-                    </li>
-                    <li class="sm:mx-1 my-2 sm:my-0">
-                        <router-link :to="{ path: '/auth/dashboard' }">
-                            <Button variant="link" :class="{ underline: currentPageTitle === 'Dashboard' }"
-                                class="px-1 lg:px-2">Dashboard</Button>
                         </router-link>
                     </li>
                     <li class="sm:mx-1 my-2 sm:my-0">

@@ -69,7 +69,6 @@ let excalidrawAPI = null;
 const initialData = ref(null);
 
 const saveToLocalStorage = (elements, appState, files) => {
-    console.log('Saving to localStorage:', { elements, appState, files });
     const serializedData = serializeAsJSON(elements, appState, files, 'local');
     localStorage.setItem('excalidrawData', serializedData);
 };
@@ -89,22 +88,16 @@ const handleDropdownAction = (option) => {
 
 const clearExcalidraw = async () => {
     try {
-        // Clear local storage
         localStorage.removeItem('excalidrawData');
-
-        // Clear Firestore
         const userId = user.value.uid;
         await deleteDoc(doc(firestore, `users/${userId}/excalidraw/excalidraw`));
 
-        // Reset Excalidraw
         if (excalidrawAPI) {
             excalidrawAPI.resetScene();
         }
 
         toast.success("Excalidraw cleared successfully");
-        console.log('Excalidraw cleared');
 
-        // Remount Excalidraw to reflect the changes
         mountExcalidraw(isFullscreen.value ? excalidrawFullscreenContainer.value : excalidrawContainer.value, isFullscreen.value);
     } catch (error) {
         console.error("Error clearing Excalidraw:", error);
@@ -115,26 +108,20 @@ const clearExcalidraw = async () => {
 const debouncedSaveToLocalStorage = debounce(saveToLocalStorage, 5000);
 
 const loadFromLocalStorage = () => {
-    console.log('Loading from localStorage');
     const savedData = localStorage.getItem('excalidrawData');
     if (savedData) {
-        console.log('Data found in localStorage');
         return JSON.parse(savedData);
     }
-    console.log('No data found in localStorage');
     return null;
 };
 
 const saveToFirestore = async () => {
     if (!excalidrawAPI) {
-        console.log('excalidrawAPI is null, cannot save');
         return;
     }
     const elements = excalidrawAPI.getSceneElements();
     const appState = excalidrawAPI.getAppState();
     const files = excalidrawAPI.getFiles();
-
-    console.log('Saving to Firestore:', { elements, appState, files });
 
     const serializedData = serializeAsJSON(elements, appState, files, 'database');
 
@@ -142,7 +129,6 @@ const saveToFirestore = async () => {
         await setDoc(doc(firestore, `users/${user.value.uid}/excalidraw/excalidraw`), {
             data: serializedData
         });
-        console.log("Drawing saved to Firestore");
         toast.success("Drawing saved successfully to Firestore");
     } catch (error) {
         console.error("Error saving drawing:", error);
@@ -151,14 +137,12 @@ const saveToFirestore = async () => {
 };
 
 const loadFromFirestore = async () => {
-    console.log('Loading from Firestore');
     try {
         const docRef = doc(firestore, `users/${user.value.uid}/excalidraw/excalidraw`);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
             const data = docSnap.data().data;
-            console.log("Drawing loaded from Firestore");
             toast.success("Drawing loaded from Firestore");
             return JSON.parse(data);
         }
@@ -166,15 +150,12 @@ const loadFromFirestore = async () => {
         console.error("Error loading drawing:", error);
         toast.error("Failed to load drawing from Firestore");
     }
-    console.log('No data found in Firestore');
     return null;
 };
 
 const clearLocalStorage = () => {
     localStorage.removeItem('excalidrawData');
     toast.success("Local storage cleared");
-    console.log('Local storage cleared');
-    // Reload the component to reflect the changes
     mountExcalidraw(isFullscreen.value ? excalidrawFullscreenContainer.value : excalidrawContainer.value, isFullscreen.value);
 };
 
@@ -182,7 +163,6 @@ const ExcalidrawWrapper = React.memo((props) => {
     return React.createElement(Excalidraw, {
         initialData: props.initialData,
         onChange: (elements, appState, files) => {
-            console.log('onChange triggered');
             debouncedSaveToLocalStorage(elements, appState, files);
         },
         onCollabButtonClick: () => {
@@ -196,14 +176,12 @@ const ExcalidrawWrapper = React.memo((props) => {
 
 const mountExcalidraw = async (container, isFullscreenMode = false) => {
     if (container) {
-        console.log(`Mounting Excalidraw in ${isFullscreenMode ? 'fullscreen' : 'normal'} mode`);
 
         const rootToUse = isFullscreenMode ? fullscreenRoot : root;
         if (rootToUse) {
             rootToUse.unmount();
         }
 
-        // Try to load from localStorage first, then Firestore
         let savedData = loadFromFirestore();
         if (!savedData) {
             savedData = await loadFromLocalStorage();
@@ -257,19 +235,16 @@ const mountExcalidraw = async (container, isFullscreenMode = false) => {
 };
 
 onMounted(async () => {
-    console.log('Component mounted');
     await mountExcalidraw(excalidrawContainer.value);
 });
 
 onUnmounted(() => {
-    console.log('Component unmounting');
     if (root) {
         root.unmount();
     }
     if (fullscreenRoot) {
         fullscreenRoot.unmount();
     }
-    saveToFirestore();
 });
 
 const toggleFullscreen = () => {
@@ -277,7 +252,6 @@ const toggleFullscreen = () => {
 };
 
 watch(isFullscreen, (newValue) => {
-    console.log('Fullscreen changed:', newValue);
     nextTick(() => {
         if (newValue) {
             mountExcalidraw(excalidrawFullscreenContainer.value, true);

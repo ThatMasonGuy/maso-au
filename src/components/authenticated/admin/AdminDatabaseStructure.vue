@@ -44,7 +44,8 @@ const topLevelCollections = [
     'joinUrls',
     'websiteData',
     'learningManagementSystem',
-    'mailing'
+    'mailing',
+    'kanban'
 ];
 
 const downloadOptions = [

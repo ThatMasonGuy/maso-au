@@ -1,0 +1,1 @@
+import{h as a}from"./index-Cur_j5y1.js";import{b as o,d as l,q as t,aX as n,u as c}from"./@vue-DxRL_zcr.js";const u={__name:"DialogFooter",props:{class:{type:null,required:!1}},setup(s){const e=s;return(r,m)=>(o(),l("div",{class:n(c(a)("flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-x-2",e.class))},[t(r.$slots,"default")],2))}};export{u as _};

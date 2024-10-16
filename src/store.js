@@ -4,6 +4,24 @@ import { auth, firestore, storage } from '@/firebase';
 import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
+// Custom storage object
+const customStorage = {
+  getItem: key => {
+    return localStorage.getItem(key) || sessionStorage.getItem(key);
+  },
+  setItem: (key, value) => {
+    if (localStorage.getItem('user')) {
+      localStorage.setItem(key, value);
+    } else {
+      sessionStorage.setItem(key, value);
+    }
+  },
+  removeItem: key => {
+    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
+  }
+};
+
 const store = createStore({
   state: {
     portfolio: null,
@@ -215,15 +233,14 @@ const store = createStore({
     },
     logoutUser({ commit }) {
       commit('CLEAR_USER');
-      localStorage.removeItem('user');
-      sessionStorage.removeItem('user');
+      customStorage.removeItem('vuex'); // Remove the entire persisted state
       console.log('User has been logged out and persisted state cleared.');
     },
   },
   plugins: [
     createPersistedState({
       paths: ['user', 'settings', 'portfolio', 'homeData'],
-      storage: localStorage.getItem('user', 'settings', 'portfolio', 'homeData') ? localStorage : sessionStorage,
+      storage: customStorage,
     }),
   ],
 });

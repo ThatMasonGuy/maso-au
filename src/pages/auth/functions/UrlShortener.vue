@@ -209,7 +209,7 @@ const shortenUrl = async () => {
                 size: 240,
                 background: backgroundColor.value,
                 foreground: foregroundColor.value,
-                level: 'H',
+                level: 'L',
             });
 
             const sizeWithBorder = qr.size + padding.value * 2;

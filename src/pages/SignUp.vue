@@ -2,12 +2,6 @@
   <div class="w-full lg:grid lg:min-h-screen lg:grid-cols-2 h-screen">
     <div class="flex items-center justify-center py-12 px-4 mx-auto">
       <div class="mx-auto grid w-[350px] gap-6">
-        <router-link to="/">
-          <Button class="absolute top-2 left-2 z-20">Return Home</Button>
-        </router-link>
-        <router-link to="/">
-          <Button class="absolute top-2 right-2 z-20">Dark Mode</Button>
-        </router-link>
         <div class="grid gap-2 text-center">
           <h1 class="text-3xl font-bold mb-6">Sign up</h1>
           <p class="text-balance text-muted-foreground">
@@ -97,6 +91,7 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
+import { signInWithGoogle } from '@/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -110,6 +105,7 @@ const firstName = ref('');
 const lastName = ref('');
 const userName = ref('');
 const emailAddress = ref('');
+const country = ref('');
 const phoneNumber = ref('');
 const password = ref('');
 const confirmPassword = ref('');
@@ -307,7 +303,7 @@ const countries = ref([
   { label: 'Vietnam', value: '+84', code: 'VN' },
   { label: 'Yemen', value: '+967', code: 'YE' },
   { label: 'Zambia', value: '+260', code: 'ZM' },
-  { label: 'Zimbabwe', value: '+263', code: 'ZW' }
+  { label: 'Zimbabwe', value: '+263', code: 'ZW' },
 ]);
 
 const phonePadding = computed(() => {
@@ -368,6 +364,7 @@ const handleSignUp = async () => {
       lastName: lastName.value,
       userName: userName.value,
       emailAddress: emailAddress.value,
+      country: country.value,
       phoneNumber: formattedPhoneNumber.value,
       password: password.value,
     });

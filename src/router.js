@@ -393,33 +393,6 @@ const routes = [
       inProgress: false,
     },
   },
-  {
-    path: '/auth/dashboard',
-    alias: '/auth/dashboard/',
-    name: 'Dashboard',
-    component: () => import('@/pages/auth/Dashboard.vue'),
-    meta: {
-      requiresAuth: true,
-      title: 'Dashboard',
-      metaTags: [
-        {
-          name: 'description',
-          content: 'Dashboard page accessible only to authorized users of Maso.au.'
-        },
-        {
-          property: 'og:title',
-          content: 'Dashboard - Maso.au'
-        },
-        {
-          property: 'og:description',
-          content: 'Dashboard page accessible only to authorized users of Maso.au.'
-        }
-      ],
-      requiresOverlay: true,
-      requiresAuthOverlay: true,
-      inProgress: false,
-    },
-  },
 
   // -------------------------------- FUNCTIONS --------------------------------
 

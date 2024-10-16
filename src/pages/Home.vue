@@ -62,6 +62,8 @@
 
   <div class="bg-[#98E278]">
     <GallerySection v-if="homeData" :images="images" />
+  </div>
+  <!--
     <svg id="visual" viewBox="0 0 960 92" class="w-full" preserve-aspect-ratio="none" xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
       <defs>
@@ -74,6 +76,7 @@
         fill="#956CC6" stroke-linecap="round" stroke-linejoin="miter" filter="url(#shadow)"></path>
     </svg>
   </div>
+
 
   <div class="bg-[#F9A03F]">
     <TimelineSection v-if="homeData && homeData.sections && homeData.sections.timeline"
@@ -94,7 +97,7 @@
   <div class="bg-[#F9A03F]">
     <TestimonialsSection v-if="homeData && homeData.sections && homeData.sections.testimonials"
       :data="homeData.sections.testimonials" />
-  </div>
+  </div> -->
 </template>
 
 <script setup>

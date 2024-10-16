@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <div class="flex justify-end">
-                    <Button type="submit">Save Invoice</Button>
+                    <Button type="submit">Save and Download</Button>
                 </div>
             </form>
         </div>

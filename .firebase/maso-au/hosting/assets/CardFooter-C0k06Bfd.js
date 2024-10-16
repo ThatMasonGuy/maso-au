@@ -1,0 +1,1 @@
+import{h as a}from"./index-Cur_j5y1.js";import{b as t,d as o,q as l,aX as n,u as c}from"./@vue-DxRL_zcr.js";const f={__name:"CardFooter",props:{class:{type:null,required:!1}},setup(e){const s=e;return(r,p)=>(t(),o("div",{class:n(c(a)("flex items-center p-6 pt-0",s.class))},[l(r.$slots,"default")],2))}};export{f as _};
