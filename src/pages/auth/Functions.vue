@@ -70,7 +70,7 @@ const components = [
     { id: 3, name: DiceRoll, active: true, complete: true },
     { id: 4, name: TicTacToe, active: true, complete: true },
     { id: 5, name: InvoiceGenerator, active: true, complete: true },
-    { id: 6, name: CodeSnippet, active: true, complete: false },
+    { id: 6, name: CodeSnippet, active: true, complete: true },
     { id: 7, name: CurrencyConvertor, active: true, complete: false },
     { id: 8, name: EventCountdown, active: true, complete: false },
     { id: 9, name: StockTracker, active: true, complete: false },
